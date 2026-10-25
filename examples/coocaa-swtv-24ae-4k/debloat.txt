@@ -1,0 +1,21 @@
+# Coocaa / Skyworth SWTV-24AE-4K (Android 14) Debloat List
+# Applied via: tools/disable.sh examples/coocaa-swtv-24ae-4k/debloat.txt
+
+# Manufacturer recommendations, telemetry, demo
+com.smartdevice.recommendation
+com.smartdevice.recordactivation
+com.smartdevice.dailymanage
+com.smartdevice.dailyshortcut
+com.smartdevice.aftersale
+com.Smartdevice.emanual
+com.smartdevice.myapp
+com.smartdevice.factory
+com.sky.market
+com.smartdevice.leanbacklauncher.customizer
+com.mediatek.tv.retaildemo
+
+# Unused regional third-party preloaded apps
+com.mercadolibre.android.mplay_tv
+
+# Feedback / background reporting
+com.google.android.feedback
