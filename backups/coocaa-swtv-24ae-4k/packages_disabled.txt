@@ -1,0 +1,8 @@
+package:com.cltv.hybrid
+package:com.mediatek.dtv.tvinput.isdbtuner
+package:com.mediatek.tv.retaildemo
+package:com.smartdevice.myapp
+package:com.cltv.mal
+package:com.mediatek.dtv.tvinput.atsctuner
+package:com.sky.market
+package:com.mediatek.opapp
