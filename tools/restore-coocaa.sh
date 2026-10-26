@@ -8,7 +8,8 @@ export TV_HOST
 echo "Restoring packages on Coocaa TV at $TV_HOST..."
 tools/restore.sh examples/coocaa-swtv-24ae-4k/debloat.txt com.google.android.apps.tv.launcherx
 
-echo "Unsuspending protected system packages..."
+echo "Re-enabling setupwraith and unsuspending packages..."
+/opt/homebrew/bin/adb -s "$TV_HOST:5555" shell pm enable com.google.android.tungsten.setupwraith || true
 /opt/homebrew/bin/adb -s "$TV_HOST:5555" shell pm unsuspend com.smartdevice.myapp || true
 /opt/homebrew/bin/adb -s "$TV_HOST:5555" shell pm unsuspend com.sky.market || true
 /opt/homebrew/bin/adb -s "$TV_HOST:5555" shell pm unsuspend com.mediatek.tv.retaildemo || true
