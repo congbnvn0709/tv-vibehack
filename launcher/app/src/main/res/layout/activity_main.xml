@@ -145,6 +145,12 @@
                 android:orientation="horizontal">
 
                 <TextView
+                    android:id="@+id/btnKidsMode"
+                    style="@style/TopButton"
+                    android:text="Hẹn giờ"
+                    android:drawableStart="@drawable/ic_timer" />
+
+                <TextView
                     android:id="@+id/btnCalendar"
                     style="@style/TopButton"
                     android:text="Calendar"
@@ -198,4 +204,10 @@
 
     <!-- Settings Fullscreen Overlay -->
     <include layout="@layout/overlay_settings" />
+
+    <!-- Kids Mode Settings Overlay -->
+    <include layout="@layout/overlay_kids_mode" />
+
+    <!-- Kids Mode Lock Screen Overlay -->
+    <include layout="@layout/overlay_kids_lock" />
 </FrameLayout>

@@ -1,0 +1,160 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/kidsOverlay"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#EB080A0E"
+    android:clickable="true"
+    android:focusable="true"
+    android:paddingStart="60dp"
+    android:paddingEnd="60dp"
+    android:paddingTop="36dp"
+    android:paddingBottom="36dp"
+    android:visibility="gone">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <!-- Header -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical"
+            android:orientation="horizontal"
+            android:layout_marginBottom="28dp">
+
+            <TextView
+                android:id="@+id/btnKidsClose"
+                style="@style/TopButton"
+                android:layout_width="44dp"
+                android:layout_height="44dp"
+                android:gravity="center"
+                android:text="←"
+                android:textSize="20sp" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:fontFamily="@font/outfit"
+                android:fontVariationSettings="'wght' 600"
+                android:text="Hẹn giờ &amp; Khóa trẻ em"
+                android:textColor="#FFFFFFFF"
+                android:textSize="28sp" />
+
+            <TextView
+                android:id="@+id/txtKidsTimerStatus"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="24dp"
+                android:fontFamily="@font/outfit"
+                android:fontVariationSettings="'wght' 400"
+                android:text="Trạng thái: Đang tắt"
+                android:textColor="#80FFFFFF"
+                android:textSize="18sp" />
+        </LinearLayout>
+
+        <!-- Main Card Options -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/setting_card_bg"
+            android:orientation="vertical"
+            android:padding="28dp"
+            android:layout_marginBottom="24dp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/outfit"
+                android:fontVariationSettings="'wght' 500"
+                android:text="Chọn thời gian tự động tắt TV:"
+                android:textColor="#CCFFFFFF"
+                android:textSize="18sp"
+                android:layout_marginBottom="16dp" />
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/btnTimer15"
+                    style="@style/SettingOption"
+                    android:text="15 phút" />
+
+                <TextView
+                    android:id="@+id/btnTimer30"
+                    style="@style/SettingOption"
+                    android:layout_marginStart="14dp"
+                    android:text="30 phút" />
+
+                <TextView
+                    android:id="@+id/btnTimer45"
+                    style="@style/SettingOption"
+                    android:layout_marginStart="14dp"
+                    android:text="45 phút" />
+
+                <TextView
+                    android:id="@+id/btnTimer60"
+                    style="@style/SettingOption"
+                    android:layout_marginStart="14dp"
+                    android:text="60 phút" />
+
+                <TextView
+                    android:id="@+id/btnTimerOff"
+                    style="@style/SettingOption"
+                    android:layout_marginStart="14dp"
+                    android:text="Tắt hẹn giờ" />
+            </LinearLayout>
+        </LinearLayout>
+
+        <!-- PIN and Security Section -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/setting_card_bg"
+            android:orientation="vertical"
+            android:padding="28dp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/outfit"
+                android:fontVariationSettings="'wght' 500"
+                android:text="Bảo mật &amp; Mã PIN phụ huynh:"
+                android:textColor="#CCFFFFFF"
+                android:textSize="18sp"
+                android:layout_marginBottom="8dp" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/outfit"
+                android:text="Mã PIN mặc định ban đầu là: 0000. Dùng để mở khóa TV khi hết giờ."
+                android:textColor="#70FFFFFF"
+                android:textSize="14sp"
+                android:layout_marginBottom="16dp" />
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/btnKidsChangePin"
+                    style="@style/SettingOption"
+                    android:text="Đổi mã PIN mới" />
+
+                <TextView
+                    android:id="@+id/btnKidsLockNow"
+                    style="@style/SettingOption"
+                    android:layout_marginStart="14dp"
+                    android:text="Khóa TV ngay bây giờ" />
+            </LinearLayout>
+        </LinearLayout>
+
+    </LinearLayout>
+</FrameLayout>

@@ -1,0 +1,216 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/overlayKidsLock"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#FA04060A"
+    android:clickable="true"
+    android:focusable="true"
+    android:visibility="gone">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center"
+        android:orientation="vertical"
+        android:padding="24dp">
+
+        <!-- Icon & Heading -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="🌙"
+            android:textSize="54sp"
+            android:layout_marginBottom="8dp" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/outfit"
+            android:fontVariationSettings="'wght' 600"
+            android:text="ĐÃ HẾT GIỜ XEM TV"
+            android:textColor="#FFFFFFFF"
+            android:textSize="32sp"
+            android:letterSpacing="0.04"
+            android:layout_marginBottom="6dp" />
+
+        <TextView
+            android:id="@+id/txtLockSubtitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/outfit"
+            android:fontVariationSettings="'wght' 400"
+            android:text="Bé hãy nghỉ ngơi nhé. Nhờ bố mẹ nhập mã PIN để mở khóa."
+            android:textColor="#A0FFFFFF"
+            android:textSize="16sp"
+            android:layout_marginBottom="24dp" />
+
+        <!-- PIN Display Dots -->
+        <TextView
+            android:id="@+id/txtPinDots"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/outfit"
+            android:fontVariationSettings="'wght' 500"
+            android:text="○  ○  ○  ○"
+            android:textColor="#33B5E5"
+            android:textSize="36sp"
+            android:letterSpacing="0.1"
+            android:layout_marginBottom="24dp" />
+
+        <!-- 3x4 On-Screen Keypad for D-Pad / Remote Navigation -->
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <!-- Row 1: 1, 2, 3 -->
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/pad1"
+                    style="@style/SettingOption"
+                    android:layout_width="68dp"
+                    android:layout_height="50dp"
+                    android:gravity="center"
+                    android:text="1"
+                    android:textSize="20sp" />
+
+                <TextView
+                    android:id="@+id/pad2"
+                    style="@style/SettingOption"
+                    android:layout_width="68dp"
+                    android:layout_height="50dp"
+                    android:layout_marginStart="12dp"
+                    android:gravity="center"
+                    android:text="2"
+                    android:textSize="20sp" />
+
+                <TextView
+                    android:id="@+id/pad3"
+                    style="@style/SettingOption"
+                    android:layout_width="68dp"
+                    android:layout_height="50dp"
+                    android:layout_marginStart="12dp"
+                    android:gravity="center"
+                    android:text="3"
+                    android:textSize="20sp" />
+            </LinearLayout>
+
+            <!-- Row 2: 4, 5, 6 -->
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/pad4"
+                    style="@style/SettingOption"
+                    android:layout_width="68dp"
+                    android:layout_height="50dp"
+                    android:gravity="center"
+                    android:text="4"
+                    android:textSize="20sp" />
+
+                <TextView
+                    android:id="@+id/pad5"
+                    style="@style/SettingOption"
+                    android:layout_width="68dp"
+                    android:layout_height="50dp"
+                    android:layout_marginStart="12dp"
+                    android:gravity="center"
+                    android:text="5"
+                    android:textSize="20sp" />
+
+                <TextView
+                    android:id="@+id/pad6"
+                    style="@style/SettingOption"
+                    android:layout_width="68dp"
+                    android:layout_height="50dp"
+                    android:layout_marginStart="12dp"
+                    android:gravity="center"
+                    android:text="6"
+                    android:textSize="20sp" />
+            </LinearLayout>
+
+            <!-- Row 3: 7, 8, 9 -->
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/pad7"
+                    style="@style/SettingOption"
+                    android:layout_width="68dp"
+                    android:layout_height="50dp"
+                    android:gravity="center"
+                    android:text="7"
+                    android:textSize="20sp" />
+
+                <TextView
+                    android:id="@+id/pad8"
+                    style="@style/SettingOption"
+                    android:layout_width="68dp"
+                    android:layout_height="50dp"
+                    android:layout_marginStart="12dp"
+                    android:gravity="center"
+                    android:text="8"
+                    android:textSize="20sp" />
+
+                <TextView
+                    android:id="@+id/pad9"
+                    style="@style/SettingOption"
+                    android:layout_width="68dp"
+                    android:layout_height="50dp"
+                    android:layout_marginStart="12dp"
+                    android:gravity="center"
+                    android:text="9"
+                    android:textSize="20sp" />
+            </LinearLayout>
+
+            <!-- Row 4: Xóa, 0, Mở -->
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/padClear"
+                    style="@style/SettingOption"
+                    android:layout_width="68dp"
+                    android:layout_height="50dp"
+                    android:gravity="center"
+                    android:text="⌫"
+                    android:textSize="20sp" />
+
+                <TextView
+                    android:id="@+id/pad0"
+                    style="@style/SettingOption"
+                    android:layout_width="68dp"
+                    android:layout_height="50dp"
+                    android:layout_marginStart="12dp"
+                    android:gravity="center"
+                    android:text="0"
+                    android:textSize="20sp" />
+
+                <TextView
+                    android:id="@+id/padEnter"
+                    style="@style/SettingOption"
+                    android:layout_width="68dp"
+                    android:layout_height="50dp"
+                    android:layout_marginStart="12dp"
+                    android:gravity="center"
+                    android:text="OK"
+                    android:textSize="18sp" />
+            </LinearLayout>
+        </LinearLayout>
+
+    </LinearLayout>
+</FrameLayout>

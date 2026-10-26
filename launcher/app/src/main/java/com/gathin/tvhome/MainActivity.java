@@ -78,6 +78,14 @@ public class MainActivity extends Activity implements AppAdapter.TileListener {
     private boolean heroShown;
     private TextView greeting;
     private TextView btnWifi;
+    private TextView btnKidsMode;
+    private View kidsOverlay;
+    private View overlayKidsLock;
+    private TextView txtKidsTimerStatus;
+    private TextView txtPinDots;
+    private final StringBuilder currentPinInput = new StringBuilder();
+    private boolean isChangingPin = false;
+    private String tempNewPin = "";
     private ImageView wallpaper;
     private int currentWallpaperRes = 0;
     private boolean isDockPeeking = false;
@@ -102,6 +110,8 @@ public class MainActivity extends Activity implements AppAdapter.TileListener {
             updateGreeting();
             updateWifiLabel();
             updateWallpaper();
+            updateKidsPill();
+            checkKidsLock();
             handler.postDelayed(this, MINUTE_MS);
         }
     };
@@ -170,8 +180,10 @@ public class MainActivity extends Activity implements AppAdapter.TileListener {
             s.setSpring(new SpringForce().setStiffness(360f).setDampingRatio(SpringForce.DAMPING_RATIO_NO_BOUNCY));
         }
 
+        btnKidsMode = findViewById(R.id.btnKidsMode);
         View btnCalendar = findViewById(R.id.btnCalendar);
         View btnSettings = findViewById(R.id.btnSettings);
+        btnKidsMode.setOnClickListener(v -> showKidsSettings());
         btnCalendar.setOnClickListener(v -> showCalendar());
         btnWifi.setOnClickListener(v -> open(new Intent(Settings.ACTION_WIFI_SETTINGS)));
         btnSettings.setOnClickListener(v -> showSettings());
@@ -183,7 +195,7 @@ public class MainActivity extends Activity implements AppAdapter.TileListener {
         View.OnKeyListener pillKeys = (v, keyCode, event) -> {
             if (event.getAction() != KeyEvent.ACTION_DOWN) return false;
             if (keyCode == KeyEvent.KEYCODE_DPAD_UP) return true;
-            if (keyCode == KeyEvent.KEYCODE_DPAD_LEFT && v.getId() == R.id.btnCalendar) return true;
+            if (keyCode == KeyEvent.KEYCODE_DPAD_LEFT && v.getId() == R.id.btnKidsMode) return true;
             if (keyCode == KeyEvent.KEYCODE_DPAD_RIGHT && v.getId() == R.id.btnSettings) return true;
             if (keyCode == KeyEvent.KEYCODE_DPAD_DOWN) {
                 setDockPeek(false, true);
@@ -193,6 +205,7 @@ public class MainActivity extends Activity implements AppAdapter.TileListener {
             }
             return false;
         };
+        btnKidsMode.setOnKeyListener(pillKeys);
         btnCalendar.setOnKeyListener(pillKeys);
         btnWifi.setOnKeyListener(pillKeys);
         btnSettings.setOnKeyListener(pillKeys);
@@ -234,6 +247,8 @@ public class MainActivity extends Activity implements AppAdapter.TileListener {
         updateGreeting();
         updateWifiLabel();
         updateWallpaper();
+        updateKidsPill();
+        checkKidsLock();
 
         handler.removeCallbacks(minuteTick);
         handler.postDelayed(minuteTick, MINUTE_MS);
@@ -257,10 +272,33 @@ public class MainActivity extends Activity implements AppAdapter.TileListener {
 
     @Override
     public boolean dispatchKeyEvent(KeyEvent event) {
-        if (event.getAction() == KeyEvent.ACTION_DOWN) {
+        if (overlayKidsLock != null && overlayKidsLock.getVisibility() == View.VISIBLE) {
             int code = event.getKeyCode();
-            if (isPurpleOrMediaKey(code)) {
-                launchStremio();
+            if (code == KeyEvent.KEYCODE_BACK) {
+                return true; // Block Back key when locked
+            }
+            if (event.getAction() == KeyEvent.ACTION_DOWN) {
+                if (code >= KeyEvent.KEYCODE_0 && code <= KeyEvent.KEYCODE_9) {
+                    onPinDigitEntered(code - KeyEvent.KEYCODE_0);
+                    return true;
+                } else if (code == KeyEvent.KEYCODE_DEL) {
+                    onPinBackspace();
+                    return true;
+                }
+            }
+            return super.dispatchKeyEvent(event);
+        }
+        if (event.getAction() == KeyEvent.ACTION_DOWN && event.getKeyCode() == KeyEvent.KEYCODE_BACK) {
+            if (kidsOverlay != null && kidsOverlay.getVisibility() == View.VISIBLE) {
+                hideKidsSettings();
+                return true;
+            }
+            if (settingsOverlay != null && settingsOverlay.getVisibility() == View.VISIBLE) {
+                hideSettings();
+                return true;
+            }
+            if (calendarOverlay != null && calendarOverlay.getVisibility() == View.VISIBLE) {
+                hideCalendar();
                 return true;
             }
         }
@@ -871,6 +909,7 @@ public class MainActivity extends Activity implements AppAdapter.TileListener {
 
     private void applyTopBarStyle(boolean showText) {
         isTopBarShowText = showText;
+        TextView btnKids = findViewById(R.id.btnKidsMode);
         TextView btnCalendar = findViewById(R.id.btnCalendar);
         TextView btnSettings = findViewById(R.id.btnSettings);
 
@@ -878,7 +917,7 @@ public class MainActivity extends Activity implements AppAdapter.TileListener {
         int padEnd = (int) ((showText ? 20 : 11) * density);
         int drawPad = (int) ((showText ? 9 : 0) * density);
 
-        TextView[] pills = new TextView[]{btnCalendar, btnWifi, btnSettings};
+        TextView[] pills = new TextView[]{btnKids, btnCalendar, btnWifi, btnSettings};
         for (TextView p : pills) {
             if (p != null) {
                 p.setPadding(padStart, 0, padEnd, 0);
@@ -889,6 +928,7 @@ public class MainActivity extends Activity implements AppAdapter.TileListener {
         if (btnCalendar != null) btnCalendar.setText(showText ? "Calendar" : "");
         if (btnSettings != null) btnSettings.setText(showText ? getString(R.string.settings) : "");
         updateWifiLabel();
+        updateKidsPill();
     }
 
     private void showSettings() {
@@ -972,5 +1012,201 @@ public class MainActivity extends Activity implements AppAdapter.TileListener {
         getSharedPreferences("tvhome_prefs", MODE_PRIVATE).edit().putString("wallpaper_theme", theme).apply();
         updateWallpaper();
         updateSettingsUI();
+    }
+
+    // ---- Kids Mode & Lock Screen Implementation --------------------------------------------------
+
+    private void updateKidsPill() {
+        if (btnKidsMode == null) return;
+        if (KidsModeManager.isTimerActive(this)) {
+            int mins = KidsModeManager.getRemainingMinutes(this);
+            btnKidsMode.setText("👶 " + mins + "p");
+            btnKidsMode.setSelected(true);
+        } else {
+            btnKidsMode.setText(isTopBarShowText ? "Hẹn giờ" : "");
+            btnKidsMode.setSelected(false);
+        }
+    }
+
+    private void checkKidsLock() {
+        if (KidsModeManager.isLocked(this)) {
+            showLockScreen();
+        }
+    }
+
+    private void showKidsSettings() {
+        if (kidsOverlay == null) {
+            kidsOverlay = findViewById(R.id.kidsOverlay);
+            txtKidsTimerStatus = findViewById(R.id.txtKidsTimerStatus);
+            findViewById(R.id.btnKidsClose).setOnClickListener(v -> hideKidsSettings());
+
+            findViewById(R.id.btnTimer15).setOnClickListener(v -> selectTimer(15));
+            findViewById(R.id.btnTimer30).setOnClickListener(v -> selectTimer(30));
+            findViewById(R.id.btnTimer45).setOnClickListener(v -> selectTimer(45));
+            findViewById(R.id.btnTimer60).setOnClickListener(v -> selectTimer(60));
+            findViewById(R.id.btnTimerOff).setOnClickListener(v -> selectTimer(0));
+
+            findViewById(R.id.btnKidsChangePin).setOnClickListener(v -> startChangePin());
+            findViewById(R.id.btnKidsLockNow).setOnClickListener(v -> {
+                hideKidsSettings();
+                KidsModeManager.setLocked(this, true);
+                showLockScreen();
+            });
+        }
+        updateKidsOverlayUI();
+        grid.setDescendantFocusability(ViewGroup.FOCUS_BLOCK_DESCENDANTS);
+        ((ViewGroup) findViewById(R.id.topButtons)).setDescendantFocusability(ViewGroup.FOCUS_BLOCK_DESCENDANTS);
+        kidsOverlay.setAlpha(0f);
+        kidsOverlay.setVisibility(View.VISIBLE);
+        kidsOverlay.animate().alpha(1f).setDuration(220).start();
+        findViewById(R.id.btnKidsClose).requestFocus();
+    }
+
+    private void updateKidsOverlayUI() {
+        if (txtKidsTimerStatus == null) return;
+        if (KidsModeManager.isTimerActive(this)) {
+            int mins = KidsModeManager.getRemainingMinutes(this);
+            txtKidsTimerStatus.setText("Trạng thái: Tắt sau " + mins + " phút");
+        } else {
+            txtKidsTimerStatus.setText("Trạng thái: Đang tắt");
+        }
+        int cur = KidsModeManager.getTimerMinutes(this);
+        findViewById(R.id.btnTimer15).setSelected(cur == 15);
+        findViewById(R.id.btnTimer30).setSelected(cur == 30);
+        findViewById(R.id.btnTimer45).setSelected(cur == 45);
+        findViewById(R.id.btnTimer60).setSelected(cur == 60);
+        findViewById(R.id.btnTimerOff).setSelected(cur == 0);
+    }
+
+    private void selectTimer(int minutes) {
+        if (minutes > 0) {
+            KidsModeManager.startTimer(this, minutes);
+            Toast.makeText(this, "Đã hẹn giờ tắt TV sau " + minutes + " phút", Toast.LENGTH_SHORT).show();
+        } else {
+            KidsModeManager.cancelTimer(this);
+            Toast.makeText(this, "Đã tắt hẹn giờ", Toast.LENGTH_SHORT).show();
+        }
+        hideKidsSettings();
+        updateKidsPill();
+    }
+
+    private void hideKidsSettings() {
+        if (kidsOverlay == null || kidsOverlay.getVisibility() != View.VISIBLE) return;
+        kidsOverlay.animate().alpha(0f).setDuration(180).withEndAction(() -> {
+            kidsOverlay.setVisibility(View.GONE);
+            grid.setDescendantFocusability(ViewGroup.FOCUS_AFTER_DESCENDANTS);
+            ((ViewGroup) findViewById(R.id.topButtons)).setDescendantFocusability(ViewGroup.FOCUS_AFTER_DESCENDANTS);
+            if (btnKidsMode != null) btnKidsMode.requestFocus();
+        }).start();
+    }
+
+    private void startChangePin() {
+        hideKidsSettings();
+        isChangingPin = true;
+        tempNewPin = "";
+        showLockScreen();
+        TextView sub = findViewById(R.id.txtLockSubtitle);
+        if (sub != null) sub.setText("Nhập mã PIN hiện tại (mặc định 0000):");
+    }
+
+    private void showLockScreen() {
+        if (overlayKidsLock == null) {
+            overlayKidsLock = findViewById(R.id.overlayKidsLock);
+            txtPinDots = findViewById(R.id.txtPinDots);
+
+            int[] padIds = new int[]{R.id.pad0, R.id.pad1, R.id.pad2, R.id.pad3, R.id.pad4,
+                    R.id.pad5, R.id.pad6, R.id.pad7, R.id.pad8, R.id.pad9};
+            for (int i = 0; i < padIds.length; i++) {
+                final int digit = i;
+                findViewById(padIds[i]).setOnClickListener(v -> onPinDigitEntered(digit));
+            }
+            findViewById(R.id.padClear).setOnClickListener(v -> onPinBackspace());
+            findViewById(R.id.padEnter).setOnClickListener(v -> submitPin());
+        }
+        currentPinInput.setLength(0);
+        updatePinDots();
+        grid.setDescendantFocusability(ViewGroup.FOCUS_BLOCK_DESCENDANTS);
+        ((ViewGroup) findViewById(R.id.topButtons)).setDescendantFocusability(ViewGroup.FOCUS_BLOCK_DESCENDANTS);
+        overlayKidsLock.setVisibility(View.VISIBLE);
+        overlayKidsLock.setAlpha(1f);
+        findViewById(R.id.pad1).requestFocus();
+    }
+
+    private void hideLockScreen() {
+        if (overlayKidsLock == null || overlayKidsLock.getVisibility() != View.VISIBLE) return;
+        overlayKidsLock.setVisibility(View.GONE);
+        grid.setDescendantFocusability(ViewGroup.FOCUS_AFTER_DESCENDANTS);
+        ((ViewGroup) findViewById(R.id.topButtons)).setDescendantFocusability(ViewGroup.FOCUS_AFTER_DESCENDANTS);
+        isChangingPin = false;
+        tempNewPin = "";
+        TextView sub = findViewById(R.id.txtLockSubtitle);
+        if (sub != null) sub.setText("Bé hãy nghỉ ngơi nhé. Nhờ bố mẹ nhập mã PIN để mở khóa.");
+        focusTile(lastFocused >= 0 ? lastFocused : 0);
+    }
+
+    private void onPinDigitEntered(int digit) {
+        if (currentPinInput.length() < 4) {
+            currentPinInput.append(digit);
+            updatePinDots();
+            if (currentPinInput.length() == 4) {
+                handler.postDelayed(this::submitPin, 200L);
+            }
+        }
+    }
+
+    private void onPinBackspace() {
+        if (currentPinInput.length() > 0) {
+            currentPinInput.deleteCharAt(currentPinInput.length() - 1);
+            updatePinDots();
+        }
+    }
+
+    private void updatePinDots() {
+        if (txtPinDots == null) return;
+        StringBuilder sb = new StringBuilder();
+        int len = currentPinInput.length();
+        for (int i = 0; i < 4; i++) {
+            if (i > 0) sb.append("  ");
+            sb.append(i < len ? "●" : "○");
+        }
+        txtPinDots.setText(sb.toString());
+    }
+
+    private void submitPin() {
+        String entered = currentPinInput.toString();
+        if (entered.length() != 4) return;
+
+        if (isChangingPin) {
+            if (tempNewPin.isEmpty()) {
+                if (KidsModeManager.verifyPin(this, entered)) {
+                    tempNewPin = "verified";
+                    currentPinInput.setLength(0);
+                    updatePinDots();
+                    TextView sub = findViewById(R.id.txtLockSubtitle);
+                    if (sub != null) sub.setText("Nhập mã PIN 4 số MỚI:");
+                    Toast.makeText(this, "Đúng mã cũ! Nhập mã PIN mới", Toast.LENGTH_SHORT).show();
+                } else {
+                    Toast.makeText(this, "Sai mã PIN hiện tại!", Toast.LENGTH_SHORT).show();
+                    currentPinInput.setLength(0);
+                    updatePinDots();
+                }
+            } else {
+                KidsModeManager.setPin(this, entered);
+                Toast.makeText(this, "Đổi mã PIN mới thành công!", Toast.LENGTH_LONG).show();
+                hideLockScreen();
+            }
+            return;
+        }
+
+        if (KidsModeManager.verifyPin(this, entered)) {
+            KidsModeManager.unlockAndReset(this);
+            hideLockScreen();
+            updateKidsPill();
+            Toast.makeText(this, "Đã mở khóa thành công!", Toast.LENGTH_SHORT).show();
+        } else {
+            Toast.makeText(this, "Sai mã PIN, vui lòng thử lại!", Toast.LENGTH_SHORT).show();
+            currentPinInput.setLength(0);
+            updatePinDots();
+        }
     }
 }

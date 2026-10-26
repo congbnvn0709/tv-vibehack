@@ -38,4 +38,20 @@
         <item name="android:fontVariationSettings">\'wght\' 600</item>
         <item name="android:letterSpacing">0.12</item>
     </style>
+
+    <!-- Frosted button style for settings and keypad options -->
+    <style name="SettingOption">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">44dp</item>
+        <item name="android:paddingStart">16dp</item>
+        <item name="android:paddingEnd">16dp</item>
+        <item name="android:background">@drawable/setting_option_bg</item>
+        <item name="android:textColor">@drawable/setting_option_text</item>
+        <item name="android:textSize">15sp</item>
+        <item name="android:fontFamily">@font/outfit</item>
+        <item name="android:fontVariationSettings">\'wght\' 500</item>
+        <item name="android:gravity">center</item>
+        <item name="android:focusable">true</item>
+        <item name="android:clickable">true</item>
+    </style>
 </resources>
