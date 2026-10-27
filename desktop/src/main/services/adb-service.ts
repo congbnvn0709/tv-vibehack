@@ -1,4 +1,4 @@
-import { execFile, spawn } from 'child_process';
+import { execFile } from 'child_process';
 import fs from 'fs';
 import path from 'path';
 
@@ -49,7 +49,7 @@ export class AdbService {
     try {
       const whichCmd = isWin ? 'where' : 'which';
       const pathFromWhich = await new Promise<string>((resolve, reject) => {
-        execFile(whichCmd, ['adb'], (error, stdout) => {
+        execFile(whichCmd, ['adb'], { timeout: 5000 }, (error, stdout) => {
           if (!error && stdout) {
             resolve(stdout.trim().split('\n')[0].trim());
           } else {
@@ -108,27 +108,35 @@ export class AdbService {
     };
   }
 
-  public async execAdb(args: string[]): Promise<string> {
+  public async execAdb(args: string[], timeoutMs = 30000): Promise<string> {
     const adb = await this.findAdbPath();
     this.emitLog(`$ adb ${args.join(' ')}\n`);
 
     return new Promise((resolve, reject) => {
-      execFile(adb, args, { maxBuffer: 10 * 1024 * 1024 }, (error, stdout, stderr) => {
-        if (stdout) this.emitLog(stdout);
-        if (stderr) this.emitLog(stderr);
+      execFile(
+        adb,
+        args,
+        {
+          maxBuffer: 10 * 1024 * 1024,
+          timeout: timeoutMs
+        },
+        (error, stdout, stderr) => {
+          if (stdout) this.emitLog(stdout);
+          if (stderr) this.emitLog(stderr);
 
-        if (error) {
-          reject(new Error(stderr || stdout || error.message));
-        } else {
-          resolve(stdout.trim());
+          if (error) {
+            reject(new Error(stderr || stdout || error.message));
+          } else {
+            resolve(stdout.trim());
+          }
         }
-      });
+      );
     });
   }
 
   public async pair(host: string, port: number, code: string): Promise<{ success: boolean; message: string }> {
     try {
-      const output = await this.execAdb(['pair', `${host}:${port}`, code]);
+      const output = await this.execAdb(['pair', `${host}:${port}`, code], 20000);
       const success = output.toLowerCase().includes('successfully paired');
       return { success, message: output };
     } catch (err: any) {
@@ -138,7 +146,7 @@ export class AdbService {
 
   public async connect(host: string, port: number): Promise<{ success: boolean; message: string }> {
     try {
-      const output = await this.execAdb(['connect', `${host}:${port}`]);
+      const output = await this.execAdb(['connect', `${host}:${port}`], 15000);
       const success = output.toLowerCase().includes('connected') && !output.toLowerCase().includes('cannot connect');
       return { success, message: output };
     } catch (err: any) {
@@ -146,14 +154,14 @@ export class AdbService {
     }
   }
 
-  public async shell(host: string, port: number, command: string): Promise<string> {
+  public async shell(host: string, port: number, command: string, timeoutMs = 30000): Promise<string> {
     const args = this.buildDeviceArgs(host, port, ['shell', command]);
-    return await this.execAdb(args);
+    return await this.execAdb(args, timeoutMs);
   }
 
   public async getDeviceInfo(host: string, port: number): Promise<AdbDeviceInfo> {
     const infoCmd = 'getprop ro.product.model; getprop ro.build.version.release; getprop ro.product.cpu.abi';
-    const output = await this.shell(host, port, infoCmd);
+    const output = await this.shell(host, port, infoCmd, 15000);
     const parsed = this.parseDeviceInfo(output);
 
     return {

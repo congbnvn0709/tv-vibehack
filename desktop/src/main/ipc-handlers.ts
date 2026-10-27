@@ -1,10 +1,12 @@
 import { ipcMain, BrowserWindow, app } from 'electron';
 import path from 'path';
+import fs from 'fs';
 import { AdbService } from './services/adb-service';
-import { BackupService } from './services/backup-service';
+import { BackupService, TvBackupData } from './services/backup-service';
 import { ProfileService } from './services/profile-service';
 import { ProvisionService } from './services/provision-service';
 import { IPC_CHANNELS, RunPipelineOptions } from '../shared/types';
+import { getResourcePaths } from './resource-helper';
 
 export function registerIpcHandlers(mainWindow: BrowserWindow) {
   const adbService = new AdbService();
@@ -31,15 +33,21 @@ export function registerIpcHandlers(mainWindow: BrowserWindow) {
   });
 
   ipcMain.handle(IPC_CHANNELS.GET_PROFILES, async () => {
-    // Look up examples directory
-    const repoExamples = path.resolve(app.getAppPath(), '../../examples');
-    const fallbackExamples = path.resolve(app.getAppPath(), 'examples');
-    const examplesDir = path.existsSync?.(repoExamples) ? repoExamples : fallbackExamples;
+    const { examplesDir } = getResourcePaths(app.getAppPath(), app.isPackaged);
     return ProfileService.loadFromDirectory(examplesDir);
   });
 
   ipcMain.handle(IPC_CHANNELS.RESTORE, async (_event, host: string, port: number) => {
-    return await backupService.restoreBackup(host, port, null);
+    const latestPath = path.join(app.getPath('userData'), 'tv_backups', 'latest_backup.json');
+    let backupData: TvBackupData | null = null;
+    if (fs.existsSync(latestPath)) {
+      try {
+        backupData = JSON.parse(fs.readFileSync(latestPath, 'utf8'));
+      } catch {
+        // ignore parse error
+      }
+    }
+    return await backupService.restoreBackup(host, port, backupData);
   });
 
   ipcMain.handle(IPC_CHANNELS.RUN_PIPELINE, async (_event, opts: RunPipelineOptions) => {
@@ -68,8 +76,8 @@ export function registerIpcHandlers(mainWindow: BrowserWindow) {
         let packagesToDisable: string[] = [];
 
         if (opts.selectedProfileId) {
-          const repoExamples = path.resolve(app.getAppPath(), '../../examples');
-          const profiles = ProfileService.loadFromDirectory(repoExamples);
+          const { examplesDir } = getResourcePaths(app.getAppPath(), app.isPackaged);
+          const profiles = ProfileService.loadFromDirectory(examplesDir);
           const found = profiles.find(p => p.id === opts.selectedProfileId);
           if (found) {
             packagesToDisable = found.packages;
@@ -94,16 +102,14 @@ export function registerIpcHandlers(mainWindow: BrowserWindow) {
       // 3. INSTALL LAUNCHER
       if (opts.doInstallLauncher) {
         pushLog('Đang định vị file APK Launcher...');
-        // Standard path to debug APK in repo
-        const defaultApk = path.resolve(
-          app.getAppPath(),
-          '../../launcher/app/build/outputs/apk/debug/app-debug.apk'
-        );
-        const packagedApk = path.resolve(process.resourcesPath, 'app-debug.apk');
-        const finalApkPath = path.existsSync?.(defaultApk) ? defaultApk : packagedApk;
+        const { apkPath } = getResourcePaths(app.getAppPath(), app.isPackaged);
 
-        pushLog(`Cài đặt APK từ: ${finalApkPath}`);
-        const installed = await provisionService.deployLauncher(opts.host, opts.port, finalApkPath, pushLog);
+        pushLog(`Cài đặt APK từ: ${apkPath}`);
+        if (!fs.existsSync(apkPath)) {
+          throw new Error(`Không tìm thấy file APK tại: ${apkPath}`);
+        }
+
+        const installed = await provisionService.deployLauncher(opts.host, opts.port, apkPath, pushLog);
         if (!installed) {
           throw new Error('Cài đặt file APK thất bại qua ADB.');
         }

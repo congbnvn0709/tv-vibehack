@@ -73,7 +73,7 @@ export class BackupService {
     const backupFilePath = path.join(backupDir, `backup_${safeModelName}_${Date.now()}.json`);
     fs.writeFileSync(backupFilePath, JSON.stringify(backupData, null, 2), 'utf8');
 
-    // Also write a latest symlink or pointer
+    // Write a latest pointer
     const latestPath = path.join(backupDir, `latest_backup.json`);
     fs.writeFileSync(latestPath, JSON.stringify(backupData, null, 2), 'utf8');
 
@@ -98,7 +98,7 @@ export class BackupService {
       log.push('Kích hoạt lại setupwraith (nếu có)...');
       await this.adb.shell(host, port, 'pm enable com.google.android.tungsten.setupwraith || true');
 
-      // 3. Unsuspend known system apps
+      // 3. Unsuspend default system apps
       const suspendedDefaults = [
         'com.smartdevice.myapp',
         'com.sky.market',
@@ -109,9 +109,14 @@ export class BackupService {
         await this.adb.shell(host, port, `pm unsuspend ${pkg} || true`);
       }
 
-      // 4. If backup data is provided, re-enable any disabled packages
-      if (backupData?.installedPackages) {
-        log.push('Đang kiểm tra và tái kích hoạt các ứng dụng hệ thống đã sao lưu...');
+      // 4. Re-enable packages from backup
+      if (backupData?.disabledPackages && backupData.disabledPackages.length > 0) {
+        log.push(`Đang tái kích hoạt ${backupData.disabledPackages.length} ứng dụng đã sao lưu...`);
+        for (const pkg of backupData.disabledPackages) {
+          log.push(`pm enable ${pkg}...`);
+          await this.adb.shell(host, port, `pm enable ${pkg} || true`);
+          await this.adb.shell(host, port, `pm unsuspend ${pkg} || true`);
+        }
       }
 
       // 5. Restore default home activity

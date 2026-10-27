@@ -11,25 +11,31 @@ export const WindowHeader: React.FC<WindowHeaderProps> = ({
   isConnected,
   onOpenConnect
 }) => {
+  const isMac = typeof navigator !== 'undefined' && /Mac/.test(navigator.platform);
+
   return (
     <header
       style={{
         background: '#0B1120',
         borderBottom: '1px solid rgba(255, 255, 255, 0.07)',
         height: 48,
-        padding: '0 18px',
+        padding: isMac ? '0 18px 0 80px' : '0 18px',
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'space-between',
         userSelect: 'none',
-        flexShrink: 0
+        flexShrink: 0,
+        // @ts-ignore
+        WebkitAppRegion: 'drag'
       }}
     >
-      <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-        <div style={{ width: 12, height: 12, borderRadius: '50%', background: '#FF5F56' }} />
-        <div style={{ width: 12, height: 12, borderRadius: '50%', background: '#FFBD2E' }} />
-        <div style={{ width: 12, height: 12, borderRadius: '50%', background: '#27C93F' }} />
-      </div>
+      {!isMac && (
+        <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+          <div style={{ width: 12, height: 12, borderRadius: '50%', background: '#FF5F56' }} />
+          <div style={{ width: 12, height: 12, borderRadius: '50%', background: '#FFBD2E' }} />
+          <div style={{ width: 12, height: 12, borderRadius: '50%', background: '#27C93F' }} />
+        </div>
+      )}
 
       <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
         <div
@@ -69,6 +75,8 @@ export const WindowHeader: React.FC<WindowHeaderProps> = ({
       <button
         onClick={onOpenConnect}
         style={{
+          // @ts-ignore
+          WebkitAppRegion: 'no-drag',
           display: 'flex',
           alignItems: 'center',
           gap: 8,

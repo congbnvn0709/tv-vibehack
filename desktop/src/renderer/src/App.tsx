@@ -176,10 +176,16 @@ export default function App() {
                         color: isAutoMode ? '#F8FAFC' : '#94A3B8',
                         fontWeight: isAutoMode ? 600 : 500,
                         cursor: 'pointer',
-                        fontSize: 12.5
+                        fontSize: 12.5,
+                        display: 'inline-flex',
+                        alignItems: 'center',
+                        gap: 6
                       }}
                     >
-                      ⚡ Tự động tối ưu
+                      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
+                        <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2" />
+                      </svg>
+                      <span>Tự động tối ưu</span>
                     </button>
                     <button
                       onClick={() => setIsAutoMode(false)}
@@ -191,10 +197,17 @@ export default function App() {
                         color: !isAutoMode ? '#F8FAFC' : '#94A3B8',
                         fontWeight: !isAutoMode ? 600 : 500,
                         cursor: 'pointer',
-                        fontSize: 12.5
+                        fontSize: 12.5,
+                        display: 'inline-flex',
+                        alignItems: 'center',
+                        gap: 6
                       }}
                     >
-                      ⚙️ Tùy chỉnh tác vụ
+                      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
+                        <circle cx="12" cy="12" r="3" />
+                        <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z" />
+                      </svg>
+                      <span>Tùy chỉnh tác vụ</span>
                     </button>
                   </div>
                 </div>
@@ -300,10 +313,17 @@ export default function App() {
                     borderRadius: 10,
                     border: 'none',
                     fontWeight: 600,
-                    cursor: 'pointer'
+                    cursor: 'pointer',
+                    display: 'inline-flex',
+                    alignItems: 'center',
+                    gap: 8
                   }}
                 >
-                  ↩️ Thực hiện khôi phục ngay
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                    <polyline points="1 4 1 10 7 10" />
+                    <path d="M3.51 15a9 9 0 1 0 2.13-9.36L1 10" />
+                  </svg>
+                  <span>Thực hiện khôi phục ngay</span>
                 </button>
               </div>
             )}

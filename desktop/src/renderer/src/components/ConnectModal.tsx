@@ -31,12 +31,12 @@ export const ConnectModal: React.FC<ConnectModalProps> = ({
     setStatusMsg('Đang gửi mã ghép nối không dây...');
     const ok = await onPair(host, pairingPort, pairingCode);
     setIsBusy(false);
-    setStatusMsg(ok ? 'Ghép nối thành công!' : 'Ghép nối thất bại. Vui lòng kiểm tra mã và cổng.');
+    setStatusMsg(ok ? 'Ghép nối thành công! Bây giờ hãy nhấn Kết nối.' : 'Ghép nối thất bại. Vui lòng kiểm tra mã và cổng.');
   };
 
   const handleConnect = async () => {
     setIsBusy(true);
-    setStatusMsg('Đang kết nối tới TV qua ADB...');
+    setStatusMsg(`Đang kết nối tới ${host}:${port} qua ADB...`);
     const ok = await onConnect(host, port);
     setIsBusy(false);
     if (ok) {
@@ -62,7 +62,7 @@ export const ConnectModal: React.FC<ConnectModalProps> = ({
     >
       <div
         style={{
-          width: 480,
+          width: 500,
           background: '#0F172A',
           border: '1px solid rgba(255, 255, 255, 0.1)',
           borderRadius: 14,
@@ -84,35 +84,15 @@ export const ConnectModal: React.FC<ConnectModalProps> = ({
           Vào <strong>Cài đặt &gt; Tùy chọn thiết bị &gt; Tùy chọn nhà phát triển &gt; Gỡ lỗi qua Wi-Fi</strong> trên TV.
         </div>
 
-        <div style={{ marginBottom: 12 }}>
-          <label style={{ display: 'block', fontSize: 11, color: '#64748B', textTransform: 'uppercase', marginBottom: 4 }}>
-            Địa chỉ IP của TV
-          </label>
-          <input
-            type="text"
-            value={host}
-            onChange={e => setHost(e.target.value)}
-            style={{
-              width: '100%',
-              background: '#141E33',
-              border: '1px solid rgba(255, 255, 255, 0.1)',
-              borderRadius: 8,
-              padding: '8px 12px',
-              color: '#fff',
-              fontSize: 13
-            }}
-          />
-        </div>
-
-        <div style={{ display: 'flex', gap: 10, marginBottom: 16 }}>
-          <div style={{ flex: 1 }}>
+        <div style={{ display: 'flex', gap: 10, marginBottom: 12 }}>
+          <div style={{ flex: 2 }}>
             <label style={{ display: 'block', fontSize: 11, color: '#64748B', textTransform: 'uppercase', marginBottom: 4 }}>
-              Cổng ghép nối (Pairing Port)
+              Địa chỉ IP của TV
             </label>
             <input
-              type="number"
-              value={pairingPort}
-              onChange={e => setPairingPort(Number(e.target.value))}
+              type="text"
+              value={host}
+              onChange={e => setHost(e.target.value)}
               style={{
                 width: '100%',
                 background: '#141E33',
@@ -126,13 +106,12 @@ export const ConnectModal: React.FC<ConnectModalProps> = ({
           </div>
           <div style={{ flex: 1 }}>
             <label style={{ display: 'block', fontSize: 11, color: '#64748B', textTransform: 'uppercase', marginBottom: 4 }}>
-              Mã ghép nối (6 số)
+              Cổng kết nối
             </label>
             <input
-              type="text"
-              placeholder="123456"
-              value={pairingCode}
-              onChange={e => setPairingCode(e.target.value)}
+              type="number"
+              value={port}
+              onChange={e => setPort(Number(e.target.value))}
               style={{
                 width: '100%',
                 background: '#141E33',
@@ -143,6 +122,53 @@ export const ConnectModal: React.FC<ConnectModalProps> = ({
                 fontSize: 13
               }}
             />
+          </div>
+        </div>
+
+        <div style={{ background: 'rgba(255, 255, 255, 0.03)', padding: 12, borderRadius: 8, marginBottom: 16 }}>
+          <div style={{ fontSize: 11, color: '#818CF8', fontWeight: 600, marginBottom: 8, textTransform: 'uppercase' }}>
+            Thông số ghép nối lần đầu (Pairing)
+          </div>
+          <div style={{ display: 'flex', gap: 10 }}>
+            <div style={{ flex: 1 }}>
+              <label style={{ display: 'block', fontSize: 11, color: '#64748B', textTransform: 'uppercase', marginBottom: 4 }}>
+                Cổng ghép nối (Pairing Port)
+              </label>
+              <input
+                type="number"
+                value={pairingPort}
+                onChange={e => setPairingPort(Number(e.target.value))}
+                style={{
+                  width: '100%',
+                  background: '#141E33',
+                  border: '1px solid rgba(255, 255, 255, 0.1)',
+                  borderRadius: 8,
+                  padding: '8px 12px',
+                  color: '#fff',
+                  fontSize: 13
+                }}
+              />
+            </div>
+            <div style={{ flex: 1 }}>
+              <label style={{ display: 'block', fontSize: 11, color: '#64748B', textTransform: 'uppercase', marginBottom: 4 }}>
+                Mã 6 số
+              </label>
+              <input
+                type="text"
+                placeholder="123456"
+                value={pairingCode}
+                onChange={e => setPairingCode(e.target.value)}
+                style={{
+                  width: '100%',
+                  background: '#141E33',
+                  border: '1px solid rgba(255, 255, 255, 0.1)',
+                  borderRadius: 8,
+                  padding: '8px 12px',
+                  color: '#fff',
+                  fontSize: 13
+                }}
+              />
+            </div>
           </div>
         </div>
 
