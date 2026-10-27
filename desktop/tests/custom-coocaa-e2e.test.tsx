@@ -67,7 +67,7 @@ describe('New Coocaa Model (Unlisted Model) End-to-End Test', () => {
       fireEvent.click(connectStatusBtn);
     });
 
-    const connectSubmitBtn = screen.getByText('2. Kết nối (Connect)');
+    const connectSubmitBtn = screen.getByRole('button', { name: /2\. Kết nối/i });
     await act(async () => {
       fireEvent.click(connectSubmitBtn);
     });

@@ -80,8 +80,8 @@ export const ConnectModal: React.FC<ConnectModalProps> = ({
           </button>
         </div>
 
-        <div style={{ fontSize: 12.5, color: '#94A3B8', marginBottom: 16, lineHeight: 1.5 }}>
-          Vào <strong>Cài đặt &gt; Tùy chọn thiết bị &gt; Tùy chọn nhà phát triển &gt; Gỡ lỗi qua Wi-Fi</strong> trên TV.
+        <div style={{ fontSize: 12.5, color: '#94A3B8', marginBottom: 14, lineHeight: 1.5 }}>
+          Vào <strong>Cài đặt &gt; Tùy chọn thiết bị &gt; Tùy chọn nhà phát triển &gt; Gỡ lỗi qua Wi-Fi</strong> (Android 11+) hoặc bật <strong>Gỡ lỗi USB</strong> (Android 7 - 10).
         </div>
 
         <div style={{ display: 'flex', gap: 10, marginBottom: 12 }}>
@@ -106,7 +106,7 @@ export const ConnectModal: React.FC<ConnectModalProps> = ({
           </div>
           <div style={{ flex: 1 }}>
             <label style={{ display: 'block', fontSize: 11, color: '#64748B', textTransform: 'uppercase', marginBottom: 4 }}>
-              Cổng kết nối
+              Cổng kết nối (Mặc định 5555)
             </label>
             <input
               type="number"
@@ -126,8 +126,11 @@ export const ConnectModal: React.FC<ConnectModalProps> = ({
         </div>
 
         <div style={{ background: 'rgba(255, 255, 255, 0.03)', padding: 12, borderRadius: 8, marginBottom: 16 }}>
-          <div style={{ fontSize: 11, color: '#818CF8', fontWeight: 600, marginBottom: 8, textTransform: 'uppercase' }}>
-            Thông số ghép nối lần đầu (Pairing)
+          <div style={{ fontSize: 11, color: '#818CF8', fontWeight: 600, marginBottom: 4, textTransform: 'uppercase' }}>
+            Thông số ghép nối lần đầu (Pairing - Chỉ cần cho Android 11+)
+          </div>
+          <div style={{ fontSize: 11.5, color: '#94A3B8', marginBottom: 8, lineHeight: 1.4 }}>
+            * Nếu dùng Android 7 - 10 hoặc cổng 5555: Bỏ qua mục này và bấm thẳng nút [Kết nối] màu tím bên dưới.
           </div>
           <div style={{ display: 'flex', gap: 10 }}>
             <div style={{ flex: 1 }}>
