@@ -9,10 +9,10 @@ export default defineConfig({
     react(),
     electron([
       {
-        entry: 'src/main/index.ts',
+        entry: path.resolve(__dirname, 'src/main/index.ts'),
         vite: {
           build: {
-            outDir: 'dist-electron/main',
+            outDir: path.resolve(__dirname, 'dist-electron/main'),
             rollupOptions: {
               external: ['electron']
             }
@@ -20,13 +20,13 @@ export default defineConfig({
         }
       },
       {
-        entry: 'src/preload/index.ts',
+        entry: path.resolve(__dirname, 'src/preload/index.ts'),
         onstart(args) {
           args.reload();
         },
         vite: {
           build: {
-            outDir: 'dist-electron/preload',
+            outDir: path.resolve(__dirname, 'dist-electron/preload'),
             rollupOptions: {
               external: ['electron']
             }
@@ -42,8 +42,9 @@ export default defineConfig({
       '@shared': path.resolve(__dirname, 'src/shared')
     }
   },
-  root: 'src/renderer',
+  root: path.resolve(__dirname, 'src/renderer'),
   build: {
-    outDir: '../../dist'
+    outDir: path.resolve(__dirname, 'dist'),
+    emptyOutDir: true
   }
 });
