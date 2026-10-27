@@ -96,11 +96,16 @@ export class ProvisionService {
       // 1. Disable tungsten setupwraith if active (avoids Google TV RecoveryActivity trap)
       await this.adb.shell(host, port, 'pm disable-user --user 0 com.google.android.tungsten.setupwraith || true');
 
-      // 2. Disable default launcherx
+      // 2. Disable default launchers: Google TV (launcherx) and Android 7/8/9 (leanbacklauncher)
       await this.adb.shell(host, port, 'pm disable-user --user 0 com.google.android.apps.tv.launcherx || true');
+      await this.adb.shell(host, port, 'pm disable-user --user 0 com.google.android.leanbacklauncher || true');
 
-      // 3. Set custom home activity
-      await this.adb.shell(host, port, `cmd package set-home-activity --user 0 ${launcherComponent}`);
+      // 3. Set custom home activity (Supported on Android 8+)
+      try {
+        await this.adb.shell(host, port, `cmd package set-home-activity --user 0 ${launcherComponent}`);
+      } catch {
+        // Fallback for Android 7 where cmd package set-home-activity is unavailable (resolved automatically by intent)
+      }
       return true;
     } catch {
       return false;
