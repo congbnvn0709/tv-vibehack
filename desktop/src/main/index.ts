@@ -1,6 +1,7 @@
 import { app, BrowserWindow } from 'electron';
 import path from 'path';
 import { fileURLToPath } from 'url';
+import { registerIpcHandlers } from './ipc-handlers';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -9,9 +10,9 @@ let mainWindow: BrowserWindow | null = null;
 
 function createWindow() {
   mainWindow = new BrowserWindow({
-    width: 1060,
-    height: 720,
-    minWidth: 920,
+    width: 1080,
+    height: 740,
+    minWidth: 940,
     minHeight: 640,
     titleBarStyle: 'hiddenInset',
     backgroundColor: '#090D16',
@@ -21,6 +22,8 @@ function createWindow() {
       contextIsolation: true
     }
   });
+
+  registerIpcHandlers(mainWindow);
 
   if (process.env.VITE_DEV_SERVER_URL) {
     mainWindow.loadURL(process.env.VITE_DEV_SERVER_URL);
