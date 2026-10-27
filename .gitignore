@@ -7,4 +7,9 @@ launcher/app/build/
 launcher/local.properties
 # your own TV's dumps (serial, android_id, device names) stay local
 backup/
+backups/
 .DS_Store
+node_modules/
+dist/
+dist-electron/
+.superpowers/
