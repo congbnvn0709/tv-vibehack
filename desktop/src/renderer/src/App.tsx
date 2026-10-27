@@ -6,7 +6,9 @@ import { FeatureTile } from './components/FeatureTile';
 import { ActionFooter } from './components/ActionFooter';
 import { ConnectModal } from './components/ConnectModal';
 import { LogViewer } from './components/LogViewer';
+import { ManualDebloatModal } from './components/ManualDebloatModal';
 import type { TvProfile } from '../../main/services/profile-service';
+import type { ScannedPackage } from '../../main/services/package-scanner';
 
 const FALLBACK_PROFILES: TvProfile[] = [
   { id: 'coocaa-swtv-24ae-4k', name: 'Coocaa SWTV-24AE-4K', debloatListPath: '', packages: new Array(13).fill('') },
@@ -34,6 +36,14 @@ export default function App() {
   const [doDebloat, setDoDebloat] = useState(true);
   const [doInstallLauncher, setDoInstallLauncher] = useState(true);
   const [enableKidsMode, setEnableKidsMode] = useState(false);
+
+  // Custom TV & Manual Debloat
+  const [customTvName, setCustomTvName] = useState('Tivi khác (Tự cấu hình)');
+  const [customDebloatMode, setCustomDebloatMode] = useState<'skip' | 'manual'>('skip');
+  const [isManualDebloatOpen, setIsManualDebloatOpen] = useState(false);
+  const [isScanningPackages, setIsScanningPackages] = useState(false);
+  const [scannedPackages, setScannedPackages] = useState<ScannedPackage[]>([]);
+  const [manualSelectedPackages, setManualSelectedPackages] = useState<string[]>([]);
 
   const [isExecuting, setIsExecuting] = useState(false);
   const [logs, setLogs] = useState<string[]>([]);
@@ -84,6 +94,36 @@ export default function App() {
     return res.success;
   };
 
+  const handleTogglePackage = (pkgName: string) => {
+    setManualSelectedPackages(prev =>
+      prev.includes(pkgName) ? prev.filter(p => p !== pkgName) : [...prev, pkgName]
+    );
+  };
+
+  const handleOpenManualDebloat = async () => {
+    if (!isConnected) {
+      setIsConnectOpen(true);
+      return;
+    }
+    setIsManualDebloatOpen(true);
+    setIsScanningPackages(true);
+    try {
+      if (window.tvApi?.scanPackages) {
+        const pkgs = await window.tvApi.scanPackages(host, port);
+        setScannedPackages(pkgs);
+        // Preselect recommended debloat packages on initial scan if nothing selected yet
+        if (manualSelectedPackages.length === 0) {
+          const rec = pkgs.filter(p => p.isRecommended && !p.isProtected).map(p => p.packageName);
+          setManualSelectedPackages(rec);
+        }
+      }
+    } catch (err) {
+      console.error('Lỗi khi quét ứng dụng từ TV:', err);
+    } finally {
+      setIsScanningPackages(false);
+    }
+  };
+
   const handleExecute = async () => {
     if (isExecuting) return;
     setIsExecuting(true);
@@ -95,12 +135,18 @@ export default function App() {
       return;
     }
 
+    const isCustom = selectedProfileId === 'custom-tv';
+    const effectiveDoDebloat = isCustom
+      ? customDebloatMode === 'manual' && manualSelectedPackages.length > 0
+      : doDebloat;
+
     const res = await window.tvApi.runPipeline({
       host,
       port,
       doBackup,
-      doDebloat,
-      selectedProfileId,
+      doDebloat: effectiveDoDebloat,
+      selectedProfileId: isCustom ? 'custom-tv' : selectedProfileId,
+      customPackages: isCustom && customDebloatMode === 'manual' ? manualSelectedPackages : undefined,
       doInstallLauncher,
       enableKidsMode
     });
@@ -129,7 +175,15 @@ export default function App() {
   const getSummary = () => {
     const steps: string[] = [];
     if (doBackup) steps.push('Sao lưu');
-    if (doDebloat) steps.push('Debloat');
+    if (selectedProfileId === 'custom-tv') {
+      if (customDebloatMode === 'manual' && manualSelectedPackages.length > 0) {
+        steps.push(`Debloat (${manualSelectedPackages.length} app)`);
+      } else {
+        steps.push('Bỏ qua Debloat');
+      }
+    } else if (doDebloat) {
+      steps.push('Debloat');
+    }
     if (doInstallLauncher) steps.push('Cài Launcher');
     if (enableKidsMode) steps.push('Kids Mode');
     return steps.join(' → ') || 'Không chọn tác vụ nào';
@@ -234,9 +288,15 @@ export default function App() {
                   <FeatureTile
                     title="Đóng băng ứng dụng rác (Debloat)"
                     description="Vô hiệu hóa các dịch vụ chạy ngầm của nhà sản xuất. Giảm giật lag và giải phóng RAM."
-                    tagText={`Profile: ${selectedProfileId || 'Chung'}`}
+                    tagText={
+                      selectedProfileId === 'custom-tv'
+                        ? customDebloatMode === 'skip'
+                          ? 'Tùy chỉnh: Bỏ qua'
+                          : `Thủ công: ${manualSelectedPackages.length} app`
+                        : `Profile: ${selectedProfileId || 'Chung'}`
+                    }
                     tagVariant="indigo"
-                    checked={doDebloat}
+                    checked={selectedProfileId === 'custom-tv' ? customDebloatMode === 'manual' && doDebloat : doDebloat}
                     onChange={v => setDoDebloat(v)}
                   />
 
@@ -308,7 +368,188 @@ export default function App() {
                       </div>
                     );
                   })}
+
+                  {/* 7th Card: Custom TV */}
+                  {(() => {
+                    const isCustom = selectedProfileId === 'custom-tv';
+                    return (
+                      <div
+                        key="custom-tv"
+                        onClick={() => {
+                          setSelectedProfileId('custom-tv');
+                          setDeviceModel(customTvName || 'Tivi khác (Tự cấu hình)');
+                        }}
+                        style={{
+                          background: isCustom ? 'rgba(99, 102, 241, 0.16)' : '#141E33',
+                          border: isCustom ? '1px solid #6366F1' : '1px solid rgba(255,255,255,0.07)',
+                          borderRadius: 12,
+                          padding: 18,
+                          cursor: 'pointer',
+                          transition: 'all 0.15s ease',
+                          display: 'flex',
+                          flexDirection: 'column',
+                          justifyContent: 'space-between'
+                        }}
+                      >
+                        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 6 }}>
+                          <span style={{ fontSize: 15, fontWeight: 600, color: '#F8FAFC', display: 'inline-flex', alignItems: 'center', gap: 6 }}>
+                            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#818CF8" strokeWidth="2.5">
+                              <line x1="12" y1="5" x2="12" y2="19" />
+                              <line x1="5" y1="12" x2="19" y2="12" />
+                            </svg>
+                            Tivi khác / Tự cấu hình
+                          </span>
+                          {isCustom && (
+                            <span style={{ fontSize: 11, fontWeight: 600, color: '#34D399', background: 'rgba(16, 185, 129, 0.12)', padding: '2px 8px', borderRadius: 4 }}>
+                              ✓ Đang chọn
+                            </span>
+                          )}
+                        </div>
+                        <div style={{ fontSize: 12.5, color: '#94A3B8' }}>
+                          Sony, Casper, LG, Android Box... (Bỏ qua hoặc quét app thủ công)
+                        </div>
+                      </div>
+                    );
+                  })()}
                 </div>
+
+                {selectedProfileId === 'custom-tv' && (
+                  <div
+                    style={{
+                      marginTop: 20,
+                      background: '#0B1120',
+                      border: '1px solid rgba(99, 102, 241, 0.3)',
+                      borderRadius: 14,
+                      padding: '20px 24px'
+                    }}
+                  >
+                    <div style={{ marginBottom: 16 }}>
+                      <label style={{ display: 'block', fontSize: 13, fontWeight: 600, color: '#F8FAFC', marginBottom: 6 }}>
+                        Tên model hoặc nhãn hiệu tivi của bạn:
+                      </label>
+                      <input
+                        type="text"
+                        value={customTvName}
+                        onChange={e => {
+                          setCustomTvName(e.target.value);
+                          setDeviceModel(e.target.value || 'Tivi khác (Tự cấu hình)');
+                        }}
+                        placeholder="Ví dụ: Sony Bravia X80K, Casper Android TV, Mibox 4K..."
+                        style={{
+                          width: '100%',
+                          maxWidth: 420,
+                          background: '#141E33',
+                          border: '1px solid rgba(255, 255, 255, 0.12)',
+                          borderRadius: 8,
+                          padding: '8px 12px',
+                          color: '#fff',
+                          fontSize: 13,
+                          outline: 'none'
+                        }}
+                      />
+                    </div>
+
+                    <div style={{ fontSize: 13, fontWeight: 600, color: '#F8FAFC', marginBottom: 10 }}>
+                      Chọn phương thức dọn dẹp (Debloat):
+                    </div>
+
+                    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: 12 }}>
+                      {/* Option 1: Bỏ qua Debloat */}
+                      <div
+                        onClick={() => setCustomDebloatMode('skip')}
+                        style={{
+                          background: customDebloatMode === 'skip' ? 'rgba(16, 185, 129, 0.1)' : '#141E33',
+                          border: customDebloatMode === 'skip' ? '1px solid #10B981' : '1px solid rgba(255, 255, 255, 0.08)',
+                          borderRadius: 10,
+                          padding: 16,
+                          cursor: 'pointer'
+                        }}
+                      >
+                        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 6 }}>
+                          <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+                            <input
+                              type="radio"
+                              name="customDebloatChoice"
+                              checked={customDebloatMode === 'skip'}
+                              onChange={() => setCustomDebloatMode('skip')}
+                            />
+                            <span style={{ fontSize: 13.5, fontWeight: 600, color: '#F8FAFC' }}>
+                              Bỏ qua Debloat (Khuyến nghị an toàn)
+                            </span>
+                          </div>
+                          <span style={{ fontSize: 11, fontWeight: 600, color: '#34D399', background: 'rgba(16, 185, 129, 0.15)', padding: '2px 8px', borderRadius: 4 }}>
+                            An toàn 100%
+                          </span>
+                        </div>
+                        <p style={{ fontSize: 12, color: '#94A3B8', margin: 0, paddingLeft: 24, lineHeight: 1.5 }}>
+                          Chỉ cài Launcher tvOS và Kids Mode. Giữ nguyên toàn bộ ứng dụng gốc của TV, không sợ lỗi hay treo máy.
+                        </p>
+                      </div>
+
+                      {/* Option 2: Debloat thủ công */}
+                      <div
+                        onClick={() => setCustomDebloatMode('manual')}
+                        style={{
+                          background: customDebloatMode === 'manual' ? 'rgba(99, 102, 241, 0.12)' : '#141E33',
+                          border: customDebloatMode === 'manual' ? '1px solid #6366F1' : '1px solid rgba(255, 255, 255, 0.08)',
+                          borderRadius: 10,
+                          padding: 16,
+                          cursor: 'pointer'
+                        }}
+                      >
+                        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 6 }}>
+                          <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+                            <input
+                              type="radio"
+                              name="customDebloatChoice"
+                              checked={customDebloatMode === 'manual'}
+                              onChange={() => setCustomDebloatMode('manual')}
+                            />
+                            <span style={{ fontSize: 13.5, fontWeight: 600, color: '#F8FAFC' }}>
+                              Debloat thủ công (Quét từ TV)
+                            </span>
+                          </div>
+                          {manualSelectedPackages.length > 0 && (
+                            <span style={{ fontSize: 11, fontWeight: 600, color: '#818CF8', background: 'rgba(99, 102, 241, 0.2)', padding: '2px 8px', borderRadius: 4 }}>
+                              Đã chọn: {manualSelectedPackages.length} app
+                            </span>
+                          )}
+                        </div>
+                        <p style={{ fontSize: 12, color: '#94A3B8', margin: 0, paddingLeft: 24, lineHeight: 1.5, marginBottom: 12 }}>
+                          Quét trực tiếp app trên TV để bạn chọn app rác cần đóng băng. Khóa bảo vệ 100% Voice Search, HDMI, Remote.
+                        </p>
+                        <div style={{ paddingLeft: 24 }}>
+                          <button
+                            onClick={e => {
+                              e.stopPropagation();
+                              setCustomDebloatMode('manual');
+                              handleOpenManualDebloat();
+                            }}
+                            style={{
+                              background: '#6366F1',
+                              color: '#fff',
+                              border: 'none',
+                              borderRadius: 6,
+                              padding: '6px 14px',
+                              fontSize: 12,
+                              fontWeight: 600,
+                              cursor: 'pointer',
+                              display: 'inline-flex',
+                              alignItems: 'center',
+                              gap: 6
+                            }}
+                          >
+                            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
+                              <circle cx="11" cy="11" r="8" />
+                              <line x1="21" y1="21" x2="16.65" y2="16.65" />
+                            </svg>
+                            <span>Quét và chọn ứng dụng trên TV...</span>
+                          </button>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                )}
               </div>
             )}
 
@@ -367,6 +608,16 @@ export default function App() {
         onPair={handlePair}
         currentHost={host}
         currentPort={port}
+      />
+
+      <ManualDebloatModal
+        isOpen={isManualDebloatOpen}
+        onClose={() => setIsManualDebloatOpen(false)}
+        packages={scannedPackages}
+        selectedPackages={manualSelectedPackages}
+        onTogglePackage={handleTogglePackage}
+        onSave={() => setIsManualDebloatOpen(false)}
+        isLoading={isScanningPackages}
       />
     </div>
   );

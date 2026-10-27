@@ -81,14 +81,16 @@ export function registerIpcHandlers(mainWindow: BrowserWindow) {
         pushLog('Đang tiến hành dọn dẹp các ứng dụng chạy ngầm (Debloat)...');
         let packagesToDisable: string[] = [];
 
-        if (opts.selectedProfileId) {
+        if (opts.selectedProfileId && opts.selectedProfileId !== 'custom-tv') {
           const { examplesDir } = getResourcePaths(app.getAppPath(), app.isPackaged);
           const profiles = ProfileService.loadFromDirectory(examplesDir);
           const found = profiles.find(p => p.id === opts.selectedProfileId);
           if (found) {
             packagesToDisable = found.packages;
           }
-        } else if (opts.customPackages && opts.customPackages.length > 0) {
+        }
+
+        if (packagesToDisable.length === 0 && opts.customPackages && opts.customPackages.length > 0) {
           packagesToDisable = opts.customPackages;
         }
 
