@@ -8,6 +8,15 @@ import { ConnectModal } from './components/ConnectModal';
 import { LogViewer } from './components/LogViewer';
 import type { TvProfile } from '../../main/services/profile-service';
 
+const FALLBACK_PROFILES: TvProfile[] = [
+  { id: 'coocaa-swtv-24ae-4k', name: 'Coocaa SWTV-24AE-4K', debloatListPath: '', packages: new Array(13).fill('') },
+  { id: 'xiaomi-mi-tv-4a', name: 'Xiaomi Mi TV 4A', debloatListPath: '', packages: new Array(21).fill('') },
+  { id: 'xiaomi-mitv-axso0', name: 'Xiaomi MiTV AXSO0', debloatListPath: '', packages: new Array(29).fill('') },
+  { id: 'tcl-g10-google-tv', name: 'TCL G10 Google TV', debloatListPath: '', packages: new Array(18).fill('') },
+  { id: 'oneplus-tv-dubai', name: 'OnePlus TV Dubai', debloatListPath: '', packages: new Array(10).fill('') },
+  { id: 'sanyo-atv-r2', name: 'Sanyo ATV-R2', debloatListPath: '', packages: new Array(29).fill('') },
+];
+
 export default function App() {
   const [currentTab, setCurrentTab] = useState('pipeline');
   const [isConnectOpen, setIsConnectOpen] = useState(false);
@@ -16,7 +25,7 @@ export default function App() {
   const [isConnected, setIsConnected] = useState(false);
   const [deviceModel, setDeviceModel] = useState('Coocaa SWTV-24AE-4K');
 
-  const [profiles, setProfiles] = useState<TvProfile[]>([]);
+  const [profiles, setProfiles] = useState<TvProfile[]>(FALLBACK_PROFILES);
   const [selectedProfileId, setSelectedProfileId] = useState('coocaa-swtv-24ae-4k');
 
   // Config toggles
@@ -258,34 +267,47 @@ export default function App() {
                   Chọn loại TV hỗ trợ Debloat
                 </h1>
                 <p style={{ color: '#94A3B8', fontSize: 13.5, marginBottom: 20 }}>
-                  Repo hỗ trợ sẵn các profile debloat tối ưu cho các dòng TV sau:
+                  Repo hỗ trợ sẵn các profile debloat tối ưu cho các dòng TV sau (chọn để áp dụng danh sách app rác cần xóa):
                 </p>
 
                 <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: 14 }}>
-                  {profiles.map(p => (
-                    <div
-                      key={p.id}
-                      onClick={() => {
-                        setSelectedProfileId(p.id);
-                        setDeviceModel(p.name);
-                        alert(`Đã chọn profile: ${p.name}`);
-                      }}
-                      style={{
-                        background: selectedProfileId === p.id ? 'rgba(99, 102, 241, 0.15)' : '#141E33',
-                        border: selectedProfileId === p.id ? '1px solid #6366F1' : '1px solid rgba(255,255,255,0.07)',
-                        borderRadius: 12,
-                        padding: 16,
-                        cursor: 'pointer'
-                      }}
-                    >
-                      <div style={{ fontSize: 14, fontWeight: 600, color: '#F8FAFC', marginBottom: 4 }}>
-                        {p.name}
+                  {profiles.map(p => {
+                    const isSelected = selectedProfileId === p.id;
+                    return (
+                      <div
+                        key={p.id}
+                        onClick={() => {
+                          setSelectedProfileId(p.id);
+                          setDeviceModel(p.name);
+                        }}
+                        style={{
+                          background: isSelected ? 'rgba(99, 102, 241, 0.16)' : '#141E33',
+                          border: isSelected ? '1px solid #6366F1' : '1px solid rgba(255,255,255,0.07)',
+                          borderRadius: 12,
+                          padding: 18,
+                          cursor: 'pointer',
+                          transition: 'all 0.15s ease',
+                          display: 'flex',
+                          flexDirection: 'column',
+                          justifyContent: 'space-between'
+                        }}
+                      >
+                        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 6 }}>
+                          <span style={{ fontSize: 15, fontWeight: 600, color: '#F8FAFC' }}>
+                            {p.name}
+                          </span>
+                          {isSelected && (
+                            <span style={{ fontSize: 11, fontWeight: 600, color: '#34D399', background: 'rgba(16, 185, 129, 0.12)', padding: '2px 8px', borderRadius: 4 }}>
+                              ✓ Đang chọn
+                            </span>
+                          )}
+                        </div>
+                        <div style={{ fontSize: 12.5, color: '#94A3B8' }}>
+                          {p.packages.length} ứng dụng rác được cấu hình dọn dẹp
+                        </div>
                       </div>
-                      <div style={{ fontSize: 12, color: '#94A3B8' }}>
-                        {p.packages.length} ứng dụng rác sẽ được dọn dẹp
-                      </div>
-                    </div>
-                  ))}
+                    );
+                  })}
                 </div>
               </div>
             )}
