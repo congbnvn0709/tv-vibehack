@@ -14,6 +14,9 @@ export const api: TvApi = {
   getProfiles: () =>
     ipcRenderer.invoke(IPC_CHANNELS.GET_PROFILES),
 
+  scanPackages: (host: string, port: number) =>
+    ipcRenderer.invoke(IPC_CHANNELS.SCAN_PACKAGES, host, port),
+
   runPipeline: (options: RunPipelineOptions) =>
     ipcRenderer.invoke(IPC_CHANNELS.RUN_PIPELINE, options),
 

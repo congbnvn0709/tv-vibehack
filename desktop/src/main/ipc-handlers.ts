@@ -5,6 +5,7 @@ import { AdbService } from './services/adb-service';
 import { BackupService, TvBackupData } from './services/backup-service';
 import { ProfileService } from './services/profile-service';
 import { ProvisionService } from './services/provision-service';
+import { PackageScannerService } from './services/package-scanner';
 import { IPC_CHANNELS, RunPipelineOptions } from '../shared/types';
 import { getResourcePaths } from './resource-helper';
 
@@ -12,6 +13,7 @@ export function registerIpcHandlers(mainWindow: BrowserWindow) {
   const adbService = new AdbService();
   const backupService = new BackupService(adbService);
   const provisionService = new ProvisionService(adbService);
+  const scannerService = new PackageScannerService(adbService);
 
   // Broadcast adb logs to renderer
   adbService.addLogListener((logChunk: string) => {
@@ -35,6 +37,10 @@ export function registerIpcHandlers(mainWindow: BrowserWindow) {
   ipcMain.handle(IPC_CHANNELS.GET_PROFILES, async () => {
     const { examplesDir } = getResourcePaths(app.getAppPath(), app.isPackaged);
     return ProfileService.loadFromDirectory(examplesDir);
+  });
+
+  ipcMain.handle(IPC_CHANNELS.SCAN_PACKAGES, async (_event, host: string, port: number) => {
+    return await scannerService.scanPackages(host, port);
   });
 
   ipcMain.handle(IPC_CHANNELS.RESTORE, async (_event, host: string, port: number) => {
