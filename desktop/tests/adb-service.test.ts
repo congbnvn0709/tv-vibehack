@@ -23,4 +23,23 @@ describe('AdbService', () => {
     expect(props.androidVersion).toBe('11');
     expect(props.abi).toBe('unknown');
   });
+
+  it('should correctly format IPv6 targets with brackets for ADB', () => {
+    const adb = new AdbService();
+    // Test IPv6 without brackets
+    const ipv6Target = AdbService.formatTarget('2405:4802:90d0:dcd0:2270:5010:ab37:4cab', 5555);
+    expect(ipv6Target).toBe('[2405:4802:90d0:dcd0:2270:5010:ab37:4cab]:5555');
+
+    // Test IPv6 already with brackets
+    const bracketedTarget = AdbService.formatTarget('[fd00:db80::2525:eb5f:ac60:5a86]', 5555);
+    expect(bracketedTarget).toBe('[fd00:db80::2525:eb5f:ac60:5a86]:5555');
+
+    // Test standard IPv4
+    const ipv4Target = AdbService.formatTarget('192.168.1.50', 5555);
+    expect(ipv4Target).toBe('192.168.1.50:5555');
+
+    // Test buildDeviceArgs with IPv6
+    const cmd = adb.buildDeviceArgs('2405:4802:90d0:dcd0:2270:5010:ab37:4cab', 5555, ['shell', 'getprop']);
+    expect(cmd).toEqual(['-s', '[2405:4802:90d0:dcd0:2270:5010:ab37:4cab]:5555', 'shell', 'getprop']);
+  });
 });

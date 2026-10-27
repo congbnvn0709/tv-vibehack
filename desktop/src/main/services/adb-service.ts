@@ -90,8 +90,16 @@ export class AdbService {
     throw new Error('Không tìm thấy công cụ ADB trên máy tính. Vui lòng cài đặt Android Platform Tools hoặc thêm adb vào PATH.');
   }
 
+  public static formatTarget(host: string, port: number): string {
+    const cleanHost = host.trim();
+    if (cleanHost.includes(':') && !cleanHost.startsWith('[')) {
+      return `[${cleanHost}]:${port}`;
+    }
+    return `${cleanHost}:${port}`;
+  }
+
   public buildDeviceArgs(host: string, port: number, args: string[]): string[] {
-    const target = `${host}:${port}`;
+    const target = AdbService.formatTarget(host, port);
     return ['-s', target, ...args];
   }
 
@@ -136,7 +144,8 @@ export class AdbService {
 
   public async pair(host: string, port: number, code: string): Promise<{ success: boolean; message: string }> {
     try {
-      const output = await this.execAdb(['pair', `${host}:${port}`, code], 20000);
+      const target = AdbService.formatTarget(host, port);
+      const output = await this.execAdb(['pair', target, code], 20000);
       const success = output.toLowerCase().includes('successfully paired');
       return { success, message: output };
     } catch (err: any) {
@@ -146,7 +155,8 @@ export class AdbService {
 
   public async connect(host: string, port: number): Promise<{ success: boolean; message: string }> {
     try {
-      const output = await this.execAdb(['connect', `${host}:${port}`], 15000);
+      const target = AdbService.formatTarget(host, port);
+      const output = await this.execAdb(['connect', target], 15000);
       const success = output.toLowerCase().includes('connected') && !output.toLowerCase().includes('cannot connect');
       return { success, message: output };
     } catch (err: any) {
