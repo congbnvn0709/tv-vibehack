@@ -23,7 +23,7 @@ The Android TV Launcher (`com.gathin.tvhome`) provides a lightweight, responsive
 
 ### Goals
 - Fully localize all launcher text into **English (Default/Fallback)** in `res/values/strings.xml` and **Vietnamese** in `res/values-vi/strings.xml`.
-- **Direct Language Switcher on Main Layout:** Add a quick-toggle language pill on the top bar (`btnLanguage`: `🌐 VN` / `🌐 EN`) and a dedicated Language card in Settings (`Auto` / `Tiếng Việt` / `English`), allowing instant switching directly from the TV remote.
+- **Language Switcher inside Settings:** Add a dedicated Language Card directly inside the Settings overlay (`overlay_settings.xml`) with 3 selectable options: `[🌐 Theo TV (Auto)]`, `[🇻🇳 Tiếng Việt]`, and `[🇬🇧 English]`, keeping the top bar clean.
 - Provide smooth, deterministic 2D D-Pad navigation across all setting cards without jumping down or losing focus.
 - Optimize the Calendar view to open instantaneously (< 10ms) without main-thread layout inflation freezes.
 - Ensure the Kids Timer automatically focuses on the first option ("15 phút"), and ensure the PIN numpad maintains exclusive, uninterrupted focus.
@@ -109,12 +109,15 @@ Extract all strings from `overlay_settings.xml`, `overlay_calendar.xml`, `overla
 - `settings_btn_wifi`: "📶 Wi-Fi Settings" / "📶 Cài đặt Wi-Fi"
 - `settings_btn_apps`: "📦 Installed Apps" / "📦 Ứng dụng đã cài"
 
-#### 2. Quick Language Switcher on Main Layout (`activity_main.xml`)
-- Add `btnLanguage` pill in `topButtons`:
-  - When in English: displays `🌐 EN` (or `🌐 English`).
-  - When in Vietnamese: displays `🌐 VN` (or `🌐 Tiếng Việt`).
-  - Clicking `btnLanguage` cycles between `Tiếng Việt` and `English` instantly, updates `SharedPreferences` ("app_locale"), and updates the active `Locale` dynamically.
-- In Settings overlay: provides the 3-option card: `[Theo TV / Auto]` `[Tiếng Việt]` `[English]`.
+#### 2. Language Switcher Card in Settings Overlay (`overlay_settings.xml`)
+- Top bar remains clean with its standard pills (Timer, Calendar, Wi-Fi, Settings).
+- Inside the Settings overlay, add a dedicated **Language Card**:
+  - Title: `settings_language_title` ("Ngôn ngữ" / "Language")
+  - Description: `settings_language_desc` ("Tùy chọn ngôn ngữ hiển thị giao diện" / "Interface display language")
+  - Option 1: `btnLangAuto` -> `[🌐 Theo TV / Auto]` (follows system language automatically)
+  - Option 2: `btnLangVi` -> `[🇻🇳 Tiếng Việt]` (forces Vietnamese)
+  - Option 3: `btnLangEn` -> `[🇬🇧 English]` (forces English)
+- Selecting an option updates `SharedPreferences` ("app_language"), immediately applies the new Locale configuration to the Activity resources, and refreshes all on-screen strings without rebooting.
 
 ### Part 2: Explicit D-Pad Focus Traversal
 In `overlay_settings.xml`:
