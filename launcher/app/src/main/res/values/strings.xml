@@ -16,4 +16,57 @@
     <string name="good_night">Good night</string>
     <string name="ethernet">Ethernet</string>
     <string name="offline">Offline</string>
+
+    <!-- Settings Overlay -->
+    <string name="settings_title">Settings &amp; Customization</string>
+    <string name="settings_subtitle">Interface appearance, dock depth, wallpaper, and system preferences</string>
+    <string name="settings_language_title">Display Language</string>
+    <string name="settings_language_desc">Switch launcher interface language</string>
+    <string name="settings_lang_auto">🌐 Auto (TV)</string>
+    <string name="settings_lang_vi">🇻🇳 Tiếng Việt</string>
+    <string name="settings_lang_en">🇬🇧 English</string>
+    <string name="settings_top_bar_title">Top Bar Style</string>
+    <string name="settings_top_bar_desc">Display style for Calendar, Timer, and utility buttons</string>
+    <string name="settings_top_style_text">🏷️ Text + Logo</string>
+    <string name="settings_top_style_icon">🔘 Logo Only</string>
+    <string name="settings_wallpaper_title">Wallpaper Theme</string>
+    <string name="settings_wallpaper_desc">Day and night dynamic wallpaper loop</string>
+    <string name="settings_wall_auto">🌗 Auto</string>
+    <string name="settings_wall_day">☀️ Day</string>
+    <string name="settings_wall_night">🌙 Night</string>
+    <string name="settings_dock_peek_title">Dock Peek Depth</string>
+    <string name="settings_dock_peek_desc">Lowering depth when dock is inactive</string>
+    <string name="settings_dock_ultra" formatted="false">🔻 Ultra Deep (95%)</string>
+    <string name="settings_dock_balanced" formatted="false">↔️ Balanced (50%)</string>
+    <string name="settings_dock_fixed">⬆️ Always Visible</string>
+    <string name="settings_system_shortcuts_title">System Shortcuts</string>
+    <string name="settings_system_shortcuts_desc">Quick access to device and network settings</string>
+    <string name="settings_btn_system">⚙️ System Settings</string>
+    <string name="settings_btn_wifi">📶 Wi-Fi Settings</string>
+    <string name="settings_btn_apps">📱 Installed Apps</string>
+
+    <!-- Calendar Overlay -->
+    <string name="cal_title">Calendar</string>
+    <string name="cal_today">Today</string>
+    <string name="cal_no_events">No scheduled events</string>
+
+    <!-- Kids Mode & Sleep Timer -->
+    <string name="kids_title">Kids Mode &amp; Sleep Timer</string>
+    <string name="kids_subtitle">Protect children\'s eyes and manage TV screen time</string>
+    <string name="kids_status_prefix">Status: </string>
+    <string name="kids_status_off">Disabled</string>
+    <string name="kids_status_remain">Turns off in %1$d mins</string>
+    <string name="kids_btn_15">15 Mins</string>
+    <string name="kids_btn_30">30 Mins</string>
+    <string name="kids_btn_45">45 Mins</string>
+    <string name="kids_btn_60">60 Mins</string>
+    <string name="kids_btn_off">Disable</string>
+    <string name="kids_change_pin">🔒 Change PIN</string>
+    <string name="kids_lock_now">🌙 Lock TV Now</string>
+    <string name="kids_locked_heading">TIME IS UP</string>
+    <string name="kids_locked_subtitle">Time to rest! Ask parents to enter the PIN to unlock.</string>
+    <string name="kids_pin_prompt_current">Enter current PIN (default 0000):</string>
+    <string name="kids_pin_prompt_new">Enter new 4-digit PIN:</string>
+    <string name="kids_pin_changed">PIN changed successfully!</string>
+    <string name="kids_pin_wrong">Incorrect PIN!</string>
 </resources>

@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Trang chủ</string>
+    <string name="inputs">Cổng vào</string>
+    <string name="wifi">Wi-Fi</string>
+    <string name="settings">Cài đặt</string>
+    <string name="choose_input">Chọn cổng vào</string>
+    <string name="connected">Đã kết nối</string>
+    <string name="standby">Chờ tín hiệu</string>
+    <string name="not_connected">Không có thiết bị</string>
+    <string name="live_tv">Truyền hình</string>
+    <string name="no_inputs">Không tìm thấy cổng vào</string>
+    <string name="good_morning">Chào buổi sáng</string>
+    <string name="good_afternoon">Chào buổi chiều</string>
+    <string name="good_evening">Chào buổi tối</string>
+    <string name="good_night">Chúc ngủ ngon</string>
+    <string name="ethernet">Mạng dây</string>
+    <string name="offline">Ngoại tuyến</string>
+
+    <!-- Settings Overlay -->
+    <string name="settings_title">Cài đặt &amp; Tùy biến</string>
+    <string name="settings_subtitle">Giao diện, độ sâu dock, hình nền và hệ thống</string>
+    <string name="settings_language_title">Ngôn ngữ hiển thị</string>
+    <string name="settings_language_desc">Thay đổi ngôn ngữ hiển thị của giao diện</string>
+    <string name="settings_lang_auto">🌐 Theo TV</string>
+    <string name="settings_lang_vi">🇻🇳 Tiếng Việt</string>
+    <string name="settings_lang_en">🇬🇧 English</string>
+    <string name="settings_top_bar_title">Giao diện thanh trên cùng</string>
+    <string name="settings_top_bar_desc">Cách hiển thị Lịch, Hẹn giờ và các nút tiện ích</string>
+    <string name="settings_top_style_text">🏷️ Chữ + Logo</string>
+    <string name="settings_top_style_icon">🔘 Chỉ hiện Logo</string>
+    <string name="settings_wallpaper_title">Chủ đề Hình nền</string>
+    <string name="settings_wallpaper_desc">Chu kỳ hình nền ngày và đêm sống động</string>
+    <string name="settings_wall_auto">🌗 Tự động</string>
+    <string name="settings_wall_day">☀️ Ban ngày</string>
+    <string name="settings_wall_night">🌙 Ban đêm</string>
+    <string name="settings_dock_peek_title">Độ sâu ẩn Dock</string>
+    <string name="settings_dock_peek_desc">Mức độ hạ xuống khi không chọn Dock</string>
+    <string name="settings_dock_ultra" formatted="false">🔻 Siêu sâu (95%)</string>
+    <string name="settings_dock_balanced" formatted="false">↔️ Vừa phải (50%)</string>
+    <string name="settings_dock_fixed">⬆️ Cố định luôn hiện</string>
+    <string name="settings_system_shortcuts_title">Phím tắt Hệ thống TV</string>
+    <string name="settings_system_shortcuts_desc">Truy cập nhanh cài đặt thiết bị và mạng</string>
+    <string name="settings_btn_system">⚙️ Cài đặt TV</string>
+    <string name="settings_btn_wifi">📶 Cài đặt Wi-Fi</string>
+    <string name="settings_btn_apps">📱 Ứng dụng đã cài</string>
+
+    <!-- Calendar Overlay -->
+    <string name="cal_title">Lịch</string>
+    <string name="cal_today">Hôm nay</string>
+    <string name="cal_no_events">Không có lịch trình</string>
+
+    <!-- Kids Mode & Sleep Timer -->
+    <string name="kids_title">Chế độ Trẻ em &amp; Hẹn giờ</string>
+    <string name="kids_subtitle">Bảo vệ mắt cho bé và quản lý thời gian xem TV</string>
+    <string name="kids_status_prefix">Trạng thái: </string>
+    <string name="kids_status_off">Đang tắt</string>
+    <string name="kids_status_remain">Tắt sau %1$d phút</string>
+    <string name="kids_btn_15">15 Phút</string>
+    <string name="kids_btn_30">30 Phút</string>
+    <string name="kids_btn_45">45 Phút</string>
+    <string name="kids_btn_60">60 Phút</string>
+    <string name="kids_btn_off">Tắt hẹn giờ</string>
+    <string name="kids_change_pin">🔒 Đổi mã PIN</string>
+    <string name="kids_lock_now">🌙 Khóa TV ngay</string>
+    <string name="kids_locked_heading">ĐÃ HẾT GIỜ XEM TV</string>
+    <string name="kids_locked_subtitle">Bé hãy nghỉ ngơi nhé. Nhờ bố mẹ nhập mã PIN để mở khóa.</string>
+    <string name="kids_pin_prompt_current">Nhập mã PIN hiện tại (mặc định 0000):</string>
+    <string name="kids_pin_prompt_new">Nhập mã PIN mới (4 số):</string>
+    <string name="kids_pin_changed">Đã đổi mã PIN thành công!</string>
+    <string name="kids_pin_wrong">Mã PIN không đúng!</string>
+</resources>
