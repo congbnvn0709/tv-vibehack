@@ -59,7 +59,7 @@
                         android:fontFamily="@font/outfit"
                         android:fontVariationSettings="'wght' 600"
                         android:letterSpacing="-0.02"
-                        android:text="October 2026"
+                        android:text="@string/cal_title"
                         android:textColor="#FFFFFFFF"
                         android:textSize="32sp" />
                 </LinearLayout>
@@ -73,7 +73,7 @@
                     android:fontFamily="@font/outfit"
                     android:fontVariationSettings="'wght' 400"
                     android:letterSpacing="0.08"
-                    android:text="No scheduled events"
+                    android:text="@string/cal_no_events"
                     android:textAllCaps="true"
                     android:textColor="#38BDF8"
                     android:textSize="13sp" />
@@ -104,7 +104,7 @@
                 <TextView
                     android:id="@+id/btnCalToday"
                     style="@style/TopButton"
-                    android:text="Today"
+                    android:text="@string/cal_today"
                     android:nextFocusLeft="@id/btnCalPrev"
                     android:nextFocusRight="@id/btnCalNext"
                     android:nextFocusUp="@id/btnCalToday"

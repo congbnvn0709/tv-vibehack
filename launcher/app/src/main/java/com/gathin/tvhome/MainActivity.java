@@ -403,6 +403,53 @@ public class MainActivity extends Activity implements AppAdapter.TileListener {
     }
     private static final Map<Integer, CalEvent> OCT_EVENTS = new HashMap<>();
 
+    private static class DayCellViewHolder {
+        View root;
+        TextView tvDayNum;
+        View dotToday;
+        View eventBadge;
+        View eventDot;
+        TextView eventText;
+    }
+    private final DayCellViewHolder[] dayCellHolders = new DayCellViewHolder[35];
+    private boolean calendarGridInitialized = false;
+
+    private void initCalendarGrid() {
+        if (calendarGridInitialized) return;
+        calGridTable.removeAllViews();
+
+        for (int row = 0; row < 5; row++) {
+            TableRow tr = new TableRow(this);
+            TableLayout.LayoutParams trLp = new TableLayout.LayoutParams(
+                    TableLayout.LayoutParams.MATCH_PARENT, 0, 1f);
+            tr.setLayoutParams(trLp);
+
+            for (int col = 0; col < 7; col++) {
+                View cell = getLayoutInflater().inflate(R.layout.item_cal_day, tr, false);
+                TableRow.LayoutParams cellLp = new TableRow.LayoutParams(0, TableRow.LayoutParams.MATCH_PARENT, 1f);
+                cell.setLayoutParams(cellLp);
+
+                int cellIndex = row * 7 + col;
+                DayCellViewHolder holder = new DayCellViewHolder();
+                holder.root = cell;
+                holder.tvDayNum = cell.findViewById(R.id.tvDayNum);
+                holder.dotToday = cell.findViewById(R.id.dotToday);
+                holder.eventBadge = cell.findViewById(R.id.eventBadge);
+                holder.eventDot = cell.findViewById(R.id.eventDot);
+                holder.eventText = cell.findViewById(R.id.eventText);
+                dayCellHolders[cellIndex] = holder;
+
+                if (row == 0) {
+                    cell.setNextFocusUpId(R.id.btnCalToday);
+                }
+
+                tr.addView(cell);
+            }
+            calGridTable.addView(tr);
+        }
+        calendarGridInitialized = true;
+    }
+
     private void showCalendar() {
         if (calendarOverlay == null) {
             calendarOverlay = findViewById(R.id.calendarOverlay);
@@ -430,6 +477,7 @@ public class MainActivity extends Activity implements AppAdapter.TileListener {
                 v.requestFocus();
             });
         }
+        initCalendarGrid();
         grid.setDescendantFocusability(ViewGroup.FOCUS_BLOCK_DESCENDANTS);
         ((ViewGroup) findViewById(R.id.topButtons)).setDescendantFocusability(ViewGroup.FOCUS_BLOCK_DESCENDANTS);
 
@@ -454,6 +502,10 @@ public class MainActivity extends Activity implements AppAdapter.TileListener {
     }
 
     private void renderCalendar() {
+        if (!calendarGridInitialized) {
+            initCalendarGrid();
+        }
+
         Calendar cal = Calendar.getInstance();
         int todayYear = cal.get(Calendar.YEAR);
         int todayMonth = cal.get(Calendar.MONTH);
@@ -465,9 +517,8 @@ public class MainActivity extends Activity implements AppAdapter.TileListener {
 
         SimpleDateFormat sdf = new SimpleDateFormat("MMMM yyyy", Locale.getDefault());
         tvCalMonthYear.setText(sdf.format(cal.getTime()));
-        tvCalSubtitle.setText(todayDay + " " + new SimpleDateFormat("MMMM", Locale.getDefault()).format(cal.getTime()).toUpperCase(Locale.getDefault()) + " — No scheduled events");
-
-        calGridTable.removeAllViews();
+        String noEventsStr = getString(R.string.cal_no_events);
+        tvCalSubtitle.setText(todayDay + " " + new SimpleDateFormat("MMMM", Locale.getDefault()).format(cal.getTime()).toUpperCase(Locale.getDefault()) + " — " + noEventsStr);
 
         int firstDayOfWeek = cal.get(Calendar.DAY_OF_WEEK) - 1; // 0=Sunday
         int daysInMonth = cal.getActualMaximum(Calendar.DAY_OF_MONTH);
@@ -481,23 +532,20 @@ public class MainActivity extends Activity implements AppAdapter.TileListener {
         View viewToFocus = null;
 
         for (int row = 0; row < 5; row++) {
-            TableRow tr = new TableRow(this);
-            TableLayout.LayoutParams trLp = new TableLayout.LayoutParams(
-                    TableLayout.LayoutParams.MATCH_PARENT, 0, 1f);
-            tr.setLayoutParams(trLp);
-
             for (int col = 0; col < 7; col++) {
-                View cell = getLayoutInflater().inflate(R.layout.item_cal_day, tr, false);
-                TextView tvDayNum = cell.findViewById(R.id.tvDayNum);
-                View dotToday = cell.findViewById(R.id.dotToday);
-                View eventBadge = cell.findViewById(R.id.eventBadge);
-                View eventDot = cell.findViewById(R.id.eventDot);
-                TextView eventText = cell.findViewById(R.id.eventText);
-
-                TableRow.LayoutParams cellLp = new TableRow.LayoutParams(0, TableRow.LayoutParams.MATCH_PARENT, 1f);
-                cell.setLayoutParams(cellLp);
-
                 int cellIndex = row * 7 + col;
+                DayCellViewHolder holder = dayCellHolders[cellIndex];
+                View cell = holder.root;
+                TextView tvDayNum = holder.tvDayNum;
+                View dotToday = holder.dotToday;
+                View eventBadge = holder.eventBadge;
+                View eventDot = holder.eventDot;
+                TextView eventText = holder.eventText;
+
+                if (row == 0) {
+                    cell.setNextFocusUpId(R.id.btnCalToday);
+                }
+
                 if (cellIndex < firstDayOfWeek) {
                     int pDay = daysInPrevMonth - (firstDayOfWeek - 1 - cellIndex);
                     tvDayNum.setText(String.valueOf(pDay));
@@ -505,20 +553,25 @@ public class MainActivity extends Activity implements AppAdapter.TileListener {
                     cell.setAlpha(0.35f);
                     cell.setFocusable(false);
                     cell.setClickable(false);
+                    dotToday.setVisibility(View.GONE);
+                    eventBadge.setVisibility(View.GONE);
+                    cell.setOnFocusChangeListener(null);
                 } else if (dayCounter <= daysInMonth) {
                     final int d = dayCounter;
                     tvDayNum.setText(String.valueOf(d));
+                    cell.setAlpha(1.0f);
                     cell.setFocusable(true);
                     cell.setClickable(true);
-                    if (row == 0) {
-                        cell.setNextFocusUpId(R.id.btnCalToday);
-                    }
+
                     boolean isToday = (calYear == todayYear && calMonth == todayMonth && d == todayDay);
                     if (isToday) {
                         dotToday.setVisibility(View.VISIBLE);
                         dotToday.setBackgroundColor(0xFF38BDF8);
                         tvDayNum.setTextColor(0xFF38BDF8);
                         viewToFocus = cell;
+                    } else {
+                        dotToday.setVisibility(View.GONE);
+                        tvDayNum.setTextColor(0xFFFFFFFF);
                     }
 
                     if (calYear == 2026 && calMonth == Calendar.OCTOBER && OCT_EVENTS.containsKey(d)) {
@@ -527,6 +580,8 @@ public class MainActivity extends Activity implements AppAdapter.TileListener {
                         eventDot.setBackgroundColor(ev.color);
                         eventText.setText(ev.badge);
                         eventText.setTextColor(ev.color);
+                    } else {
+                        eventBadge.setVisibility(View.GONE);
                     }
 
                     cell.setOnFocusChangeListener((v, hasFocus) -> {
@@ -535,7 +590,7 @@ public class MainActivity extends Activity implements AppAdapter.TileListener {
                                 tvCalSubtitle.setText(OCT_EVENTS.get(d).title);
                                 tvCalSubtitle.setTextColor(OCT_EVENTS.get(d).color);
                             } else {
-                                tvCalSubtitle.setText(d + " " + sdf.format(cal.getTime()).toUpperCase(Locale.getDefault()) + " — No scheduled events");
+                                tvCalSubtitle.setText(d + " " + sdf.format(cal.getTime()).toUpperCase(Locale.getDefault()) + " — " + noEventsStr);
                                 tvCalSubtitle.setTextColor(0xFF38BDF8);
                             }
                         }
@@ -548,11 +603,11 @@ public class MainActivity extends Activity implements AppAdapter.TileListener {
                     cell.setAlpha(0.35f);
                     cell.setFocusable(false);
                     cell.setClickable(false);
+                    dotToday.setVisibility(View.GONE);
+                    eventBadge.setVisibility(View.GONE);
+                    cell.setOnFocusChangeListener(null);
                 }
-
-                tr.addView(cell);
             }
-            calGridTable.addView(tr);
         }
 
         if (viewToFocus != null) {
