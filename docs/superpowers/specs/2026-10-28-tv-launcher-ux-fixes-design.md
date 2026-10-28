@@ -23,6 +23,7 @@ The Android TV Launcher (`com.gathin.tvhome`) provides a lightweight, responsive
 
 ### Goals
 - Fully localize all launcher text into **English (Default/Fallback)** in `res/values/strings.xml` and **Vietnamese** in `res/values-vi/strings.xml`.
+- **Direct Language Switcher on Main Layout:** Add a quick-toggle language pill on the top bar (`btnLanguage`: `🌐 VN` / `🌐 EN`) and a dedicated Language card in Settings (`Auto` / `Tiếng Việt` / `English`), allowing instant switching directly from the TV remote.
 - Provide smooth, deterministic 2D D-Pad navigation across all setting cards without jumping down or losing focus.
 - Optimize the Calendar view to open instantaneously (< 10ms) without main-thread layout inflation freezes.
 - Ensure the Kids Timer automatically focuses on the first option ("15 phút"), and ensure the PIN numpad maintains exclusive, uninterrupted focus.
@@ -77,10 +78,17 @@ The Android TV Launcher (`com.gathin.tvhome`) provides a lightweight, responsive
 
 ## 4. Detailed Technical Architecture
 
-### Part 1: String Resources
+### Part 1: String Resources & Real-time Language Switcher
+
+#### 1. String Resources
 Extract all strings from `overlay_settings.xml`, `overlay_calendar.xml`, `overlay_kids_mode.xml`, `overlay_kids_lock.xml`:
 - `settings_title`: "Settings & Customization" / "Cài đặt & Tùy biến"
 - `settings_subtitle`: "Interface appearance, dock depth, wallpaper, and system preferences" / "Giao diện, độ sâu dock, hình nền và hệ thống"
+- `settings_language_title`: "Language" / "Ngôn ngữ"
+- `settings_language_desc`: "Switch launcher display language" / "Thay đổi ngôn ngữ hiển thị của giao diện"
+- `settings_lang_auto`: "🌐 Auto (System)" / "🌐 Theo TV"
+- `settings_lang_vi`: "🇻🇳 Tiếng Việt" / "🇻🇳 Tiếng Việt"
+- `settings_lang_en`: "🇬🇧 English" / "🇬🇧 English"
 - `settings_top_bar_title`: "Top Bar Style" / "Giao diện thanh trên cùng"
 - `settings_top_bar_desc`: "Display style for Calendar, Timer, and Wi-Fi buttons" / "Cách hiển thị Lịch, Hẹn giờ và các nút tiện ích"
 - `settings_top_style_text`: "🏷️ Text + Logo" / "🏷️ Chữ + Logo"
@@ -100,6 +108,13 @@ Extract all strings from `overlay_settings.xml`, `overlay_calendar.xml`, `overla
 - `settings_btn_system`: "⚙️ System Settings" / "⚙️ Cài đặt TV"
 - `settings_btn_wifi`: "📶 Wi-Fi Settings" / "📶 Cài đặt Wi-Fi"
 - `settings_btn_apps`: "📦 Installed Apps" / "📦 Ứng dụng đã cài"
+
+#### 2. Quick Language Switcher on Main Layout (`activity_main.xml`)
+- Add `btnLanguage` pill in `topButtons`:
+  - When in English: displays `🌐 EN` (or `🌐 English`).
+  - When in Vietnamese: displays `🌐 VN` (or `🌐 Tiếng Việt`).
+  - Clicking `btnLanguage` cycles between `Tiếng Việt` and `English` instantly, updates `SharedPreferences` ("app_locale"), and updates the active `Locale` dynamically.
+- In Settings overlay: provides the 3-option card: `[Theo TV / Auto]` `[Tiếng Việt]` `[English]`.
 
 ### Part 2: Explicit D-Pad Focus Traversal
 In `overlay_settings.xml`:
