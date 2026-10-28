@@ -94,6 +94,7 @@ public class MainActivity extends Activity implements AppAdapter.TileListener {
     private String peekDepthPref = "ultra";
     private boolean isTopBarShowText = true;
     private View settingsOverlay;
+    private TextView btnLangAuto, btnLangVi, btnLangEn;
     private TextView btnTopStyleText, btnTopStyleIcon;
     private TextView btnPeekUltra, btnPeekBalanced, btnPeekNone;
     private TextView btnWallAuto, btnWallDay, btnWallNight;
@@ -117,7 +118,13 @@ public class MainActivity extends Activity implements AppAdapter.TileListener {
     };
 
     @Override
+    protected void attachBaseContext(Context base) {
+        super.attachBaseContext(LocaleHelper.applyLocale(base, LocaleHelper.getPersistedLocale(base)));
+    }
+
+    @Override
     protected void onCreate(Bundle savedInstanceState) {
+        LocaleHelper.applyLocale(this, LocaleHelper.getPersistedLocale(this));
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         density = getResources().getDisplayMetrics().density;
@@ -221,6 +228,18 @@ public class MainActivity extends Activity implements AppAdapter.TileListener {
                 setDockPeek(false, true);
             }
         });
+
+        if (savedInstanceState != null && savedInstanceState.getBoolean("show_settings", false)) {
+            grid.post(this::showSettings);
+        }
+    }
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        if (settingsOverlay != null && settingsOverlay.getVisibility() == View.VISIBLE) {
+            outState.putBoolean("show_settings", true);
+        }
     }
 
     @Override
@@ -936,6 +955,10 @@ public class MainActivity extends Activity implements AppAdapter.TileListener {
             settingsOverlay = findViewById(R.id.settingsOverlay);
             findViewById(R.id.btnSettingsClose).setOnClickListener(v -> hideSettings());
 
+            btnLangAuto = findViewById(R.id.btnLangAuto);
+            btnLangVi = findViewById(R.id.btnLangVi);
+            btnLangEn = findViewById(R.id.btnLangEn);
+
             btnTopStyleText = findViewById(R.id.btnTopStyleText);
             btnTopStyleIcon = findViewById(R.id.btnTopStyleIcon);
             btnPeekUltra = findViewById(R.id.btnPeekUltra);
@@ -944,6 +967,10 @@ public class MainActivity extends Activity implements AppAdapter.TileListener {
             btnWallAuto = findViewById(R.id.btnWallAuto);
             btnWallDay = findViewById(R.id.btnWallDay);
             btnWallNight = findViewById(R.id.btnWallNight);
+
+            btnLangAuto.setOnClickListener(v -> changeLanguage(LocaleHelper.LANG_AUTO));
+            btnLangVi.setOnClickListener(v -> changeLanguage(LocaleHelper.LANG_VI));
+            btnLangEn.setOnClickListener(v -> changeLanguage(LocaleHelper.LANG_EN));
 
             btnTopStyleText.setOnClickListener(v -> setTopBarStyle(true));
             btnTopStyleIcon.setOnClickListener(v -> setTopBarStyle(false));
@@ -979,6 +1006,13 @@ public class MainActivity extends Activity implements AppAdapter.TileListener {
 
     private void updateSettingsUI() {
         if (btnTopStyleText == null) return;
+        if (btnLangAuto != null) {
+            String curLang = LocaleHelper.getPersistedLocale(this);
+            btnLangAuto.setSelected(LocaleHelper.LANG_AUTO.equalsIgnoreCase(curLang));
+            btnLangVi.setSelected(LocaleHelper.LANG_VI.equalsIgnoreCase(curLang));
+            btnLangEn.setSelected(LocaleHelper.LANG_EN.equalsIgnoreCase(curLang));
+        }
+
         btnTopStyleText.setSelected(isTopBarShowText);
         btnTopStyleIcon.setSelected(!isTopBarShowText);
 
@@ -990,6 +1024,13 @@ public class MainActivity extends Activity implements AppAdapter.TileListener {
         btnWallAuto.setSelected("auto".equals(wTheme));
         btnWallDay.setSelected("day".equals(wTheme));
         btnWallNight.setSelected("night".equals(wTheme));
+    }
+
+    private void changeLanguage(String langCode) {
+        LocaleHelper.setPersistedLocale(this, langCode);
+        LocaleHelper.applyLocale(this, langCode);
+        updateSettingsUI();
+        recreate();
     }
 
     private void setTopBarStyle(boolean showText) {

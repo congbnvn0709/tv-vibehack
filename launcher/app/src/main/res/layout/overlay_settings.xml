@@ -21,7 +21,7 @@
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="20dp">
+            android:layout_marginBottom="16dp">
 
             <LinearLayout
                 android:layout_width="wrap_content"
@@ -47,9 +47,9 @@
                         android:text="←"
                         android:textSize="18sp"
                         android:nextFocusLeft="@id/btnSettingsClose"
-                        android:nextFocusRight="@id/btnTopStyleText"
+                        android:nextFocusRight="@id/btnLangAuto"
                         android:nextFocusUp="@id/btnSettingsClose"
-                        android:nextFocusDown="@id/btnTopStyleText" />
+                        android:nextFocusDown="@id/btnLangAuto" />
 
                     <TextView
                         android:layout_width="wrap_content"
@@ -58,7 +58,7 @@
                         android:fontFamily="@font/outfit"
                         android:fontVariationSettings="'wght' 600"
                         android:letterSpacing="-0.02"
-                        android:text="Ayarlar &amp; Özelleştirme"
+                        android:text="@string/settings_title"
                         android:textColor="#FFFFFFFF"
                         android:textSize="26sp" />
 
@@ -85,7 +85,7 @@
                     android:layout_marginTop="2dp"
                     android:fontFamily="@font/outfit"
                     android:fontVariationSettings="'wght' 300"
-                    android:text="Arayüz görünümü, dock derinliği, duvar kağıdı ve sistem tercihleri"
+                    android:text="@string/settings_subtitle"
                     android:textColor="#80FFFFFF"
                     android:textSize="13sp" />
             </LinearLayout>
@@ -106,21 +106,21 @@
                 android:layout_marginEnd="12dp"
                 android:orientation="vertical">
 
-                <!-- Card 1: Üst Bar Stili -->
+                <!-- Card 0: Display Language -->
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:background="@drawable/setting_card_bg"
                     android:orientation="vertical"
-                    android:padding="20dp"
-                    android:layout_marginBottom="16dp">
+                    android:padding="16dp"
+                    android:layout_marginBottom="12dp">
 
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:fontFamily="@font/outfit"
                         android:fontVariationSettings="'wght' 600"
-                        android:text="Üst Bar Görünümü"
+                        android:text="@string/settings_language_title"
                         android:textColor="#FFFFFFFF"
                         android:textSize="17sp" />
 
@@ -128,9 +128,105 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="2dp"
-                        android:layout_marginBottom="14dp"
+                        android:layout_marginBottom="12dp"
                         android:fontFamily="@font/outfit"
-                        android:text="Calendar, Devices ve diğer butonların görünümü"
+                        android:text="@string/settings_language_desc"
+                        android:textColor="#80FFFFFF"
+                        android:textSize="13sp" />
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:id="@+id/btnLangAuto"
+                            android:layout_width="0dp"
+                            android:layout_height="42dp"
+                            android:layout_weight="1"
+                            android:layout_marginEnd="6dp"
+                            android:background="@drawable/setting_option_bg"
+                            android:clickable="true"
+                            android:focusable="true"
+                            android:gravity="center"
+                            android:fontFamily="@font/outfit"
+                            android:fontVariationSettings="'wght' 500"
+                            android:text="@string/settings_lang_auto"
+                            android:textColor="@drawable/setting_option_text"
+                            android:textSize="13sp"
+                            android:nextFocusLeft="@id/btnLangAuto"
+                            android:nextFocusUp="@id/btnSettingsClose"
+                            android:nextFocusRight="@id/btnLangVi"
+                            android:nextFocusDown="@id/btnTopStyleText" />
+
+                        <TextView
+                            android:id="@+id/btnLangVi"
+                            android:layout_width="0dp"
+                            android:layout_height="42dp"
+                            android:layout_weight="1"
+                            android:layout_marginStart="4dp"
+                            android:layout_marginEnd="4dp"
+                            android:background="@drawable/setting_option_bg"
+                            android:clickable="true"
+                            android:focusable="true"
+                            android:gravity="center"
+                            android:fontFamily="@font/outfit"
+                            android:fontVariationSettings="'wght' 500"
+                            android:text="@string/settings_lang_vi"
+                            android:textColor="@drawable/setting_option_text"
+                            android:textSize="13sp"
+                            android:nextFocusLeft="@id/btnLangAuto"
+                            android:nextFocusUp="@id/btnSettingsClose"
+                            android:nextFocusRight="@id/btnLangEn"
+                            android:nextFocusDown="@id/btnTopStyleIcon" />
+
+                        <TextView
+                            android:id="@+id/btnLangEn"
+                            android:layout_width="0dp"
+                            android:layout_height="42dp"
+                            android:layout_weight="1"
+                            android:layout_marginStart="6dp"
+                            android:background="@drawable/setting_option_bg"
+                            android:clickable="true"
+                            android:focusable="true"
+                            android:gravity="center"
+                            android:fontFamily="@font/outfit"
+                            android:fontVariationSettings="'wght' 500"
+                            android:text="@string/settings_lang_en"
+                            android:textColor="@drawable/setting_option_text"
+                            android:textSize="13sp"
+                            android:nextFocusLeft="@id/btnLangVi"
+                            android:nextFocusUp="@id/btnSettingsClose"
+                            android:nextFocusRight="@id/btnWallAuto"
+                            android:nextFocusDown="@id/btnTopStyleIcon" />
+                    </LinearLayout>
+                </LinearLayout>
+
+                <!-- Card 1: Top Bar Style -->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/setting_card_bg"
+                    android:orientation="vertical"
+                    android:padding="16dp"
+                    android:layout_marginBottom="12dp">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="@font/outfit"
+                        android:fontVariationSettings="'wght' 600"
+                        android:text="@string/settings_top_bar_title"
+                        android:textColor="#FFFFFFFF"
+                        android:textSize="17sp" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="2dp"
+                        android:layout_marginBottom="12dp"
+                        android:fontFamily="@font/outfit"
+                        android:text="@string/settings_top_bar_desc"
                         android:textColor="#80FFFFFF"
                         android:textSize="13sp" />
 
@@ -142,7 +238,7 @@
                         <TextView
                             android:id="@+id/btnTopStyleText"
                             android:layout_width="0dp"
-                            android:layout_height="44dp"
+                            android:layout_height="42dp"
                             android:layout_weight="1"
                             android:layout_marginEnd="8dp"
                             android:background="@drawable/setting_option_bg"
@@ -151,15 +247,18 @@
                             android:gravity="center"
                             android:fontFamily="@font/outfit"
                             android:fontVariationSettings="'wght' 500"
-                            android:text="🏷️ Yazı + Logo"
+                            android:text="@string/settings_top_style_text"
                             android:textColor="@drawable/setting_option_text"
                             android:textSize="14sp"
-                            android:nextFocusDown="@+id/btnPeekUltra" />
+                            android:nextFocusLeft="@id/btnTopStyleText"
+                            android:nextFocusUp="@id/btnLangAuto"
+                            android:nextFocusRight="@id/btnTopStyleIcon"
+                            android:nextFocusDown="@id/btnPeekUltra" />
 
                         <TextView
                             android:id="@+id/btnTopStyleIcon"
                             android:layout_width="0dp"
-                            android:layout_height="44dp"
+                            android:layout_height="42dp"
                             android:layout_weight="1"
                             android:layout_marginStart="8dp"
                             android:background="@drawable/setting_option_bg"
@@ -168,27 +267,30 @@
                             android:gravity="center"
                             android:fontFamily="@font/outfit"
                             android:fontVariationSettings="'wght' 500"
-                            android:text="🔘 Sadece Logo"
+                            android:text="@string/settings_top_style_icon"
                             android:textColor="@drawable/setting_option_text"
                             android:textSize="14sp"
-                            android:nextFocusDown="@+id/btnPeekUltra" />
+                            android:nextFocusLeft="@id/btnTopStyleText"
+                            android:nextFocusUp="@id/btnLangVi"
+                            android:nextFocusRight="@id/btnWallAuto"
+                            android:nextFocusDown="@id/btnPeekBalanced" />
                     </LinearLayout>
                 </LinearLayout>
 
-                <!-- Card 2: Dock Gizlenme Seviyesi -->
+                <!-- Card 2: Dock Peek Depth -->
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:background="@drawable/setting_card_bg"
                     android:orientation="vertical"
-                    android:padding="20dp">
+                    android:padding="16dp">
 
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:fontFamily="@font/outfit"
                         android:fontVariationSettings="'wght' 600"
-                        android:text="Dock Gizlenme Seviyesi (Peek)"
+                        android:text="@string/settings_dock_peek_title"
                         android:textColor="#FFFFFFFF"
                         android:textSize="17sp" />
 
@@ -196,9 +298,9 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="2dp"
-                        android:layout_marginBottom="14dp"
+                        android:layout_marginBottom="12dp"
                         android:fontFamily="@font/outfit"
-                        android:text="Dock seçili değilken aşağı inme derinliği"
+                        android:text="@string/settings_dock_peek_desc"
                         android:textColor="#80FFFFFF"
                         android:textSize="13sp" />
 
@@ -210,7 +312,7 @@
                         <TextView
                             android:id="@+id/btnPeekUltra"
                             android:layout_width="0dp"
-                            android:layout_height="44dp"
+                            android:layout_height="42dp"
                             android:layout_weight="1"
                             android:layout_marginEnd="6dp"
                             android:background="@drawable/setting_option_bg"
@@ -219,15 +321,18 @@
                             android:gravity="center"
                             android:fontFamily="@font/outfit"
                             android:fontVariationSettings="'wght' 500"
-                            android:text="🔻 Ultra Düşük (%95)"
+                            android:text="@string/settings_dock_ultra"
                             android:textColor="@drawable/setting_option_text"
                             android:textSize="13sp"
-                            android:nextFocusUp="@+id/btnTopStyleText" />
+                            android:nextFocusLeft="@id/btnPeekUltra"
+                            android:nextFocusUp="@id/btnTopStyleText"
+                            android:nextFocusRight="@id/btnPeekBalanced"
+                            android:nextFocusDown="@id/btnPeekUltra" />
 
                         <TextView
                             android:id="@+id/btnPeekBalanced"
                             android:layout_width="0dp"
-                            android:layout_height="44dp"
+                            android:layout_height="42dp"
                             android:layout_weight="1"
                             android:layout_marginStart="4dp"
                             android:layout_marginEnd="4dp"
@@ -237,15 +342,18 @@
                             android:gravity="center"
                             android:fontFamily="@font/outfit"
                             android:fontVariationSettings="'wght' 500"
-                            android:text="↔️ Dengeli (Yarım)"
+                            android:text="@string/settings_dock_balanced"
                             android:textColor="@drawable/setting_option_text"
                             android:textSize="13sp"
-                            android:nextFocusUp="@+id/btnTopStyleText" />
+                            android:nextFocusLeft="@id/btnPeekUltra"
+                            android:nextFocusUp="@id/btnTopStyleIcon"
+                            android:nextFocusRight="@id/btnPeekNone"
+                            android:nextFocusDown="@id/btnPeekBalanced" />
 
                         <TextView
                             android:id="@+id/btnPeekNone"
                             android:layout_width="0dp"
-                            android:layout_height="44dp"
+                            android:layout_height="42dp"
                             android:layout_weight="1"
                             android:layout_marginStart="6dp"
                             android:background="@drawable/setting_option_bg"
@@ -254,10 +362,13 @@
                             android:gravity="center"
                             android:fontFamily="@font/outfit"
                             android:fontVariationSettings="'wght' 500"
-                            android:text="⬆️ Sabit Açık"
+                            android:text="@string/settings_dock_fixed"
                             android:textColor="@drawable/setting_option_text"
                             android:textSize="13sp"
-                            android:nextFocusUp="@+id/btnTopStyleText" />
+                            android:nextFocusLeft="@id/btnPeekBalanced"
+                            android:nextFocusUp="@id/btnTopStyleIcon"
+                            android:nextFocusRight="@id/btnSysSettings"
+                            android:nextFocusDown="@id/btnPeekNone" />
                     </LinearLayout>
                 </LinearLayout>
             </LinearLayout>
@@ -270,21 +381,21 @@
                 android:layout_marginStart="12dp"
                 android:orientation="vertical">
 
-                <!-- Card 3: Duvar Kağıdı Teması -->
+                <!-- Card 3: Wallpaper Theme -->
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:background="@drawable/setting_card_bg"
                     android:orientation="vertical"
-                    android:padding="20dp"
-                    android:layout_marginBottom="16dp">
+                    android:padding="16dp"
+                    android:layout_marginBottom="12dp">
 
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:fontFamily="@font/outfit"
                         android:fontVariationSettings="'wght' 600"
-                        android:text="Duvar Kağıdı Teması (Gumball HD)"
+                        android:text="@string/settings_wallpaper_title"
                         android:textColor="#FFFFFFFF"
                         android:textSize="17sp" />
 
@@ -292,9 +403,9 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="2dp"
-                        android:layout_marginBottom="14dp"
+                        android:layout_marginBottom="12dp"
                         android:fontFamily="@font/outfit"
-                        android:text="2D çizgi dizi oturma odası gündüz ve gece döngüsü"
+                        android:text="@string/settings_wallpaper_desc"
                         android:textColor="#80FFFFFF"
                         android:textSize="13sp" />
 
@@ -306,7 +417,7 @@
                         <TextView
                             android:id="@+id/btnWallAuto"
                             android:layout_width="0dp"
-                            android:layout_height="44dp"
+                            android:layout_height="42dp"
                             android:layout_weight="1"
                             android:layout_marginEnd="6dp"
                             android:background="@drawable/setting_option_bg"
@@ -315,15 +426,18 @@
                             android:gravity="center"
                             android:fontFamily="@font/outfit"
                             android:fontVariationSettings="'wght' 500"
-                            android:text="🌗 Otomatik"
+                            android:text="@string/settings_wall_auto"
                             android:textColor="@drawable/setting_option_text"
                             android:textSize="13sp"
-                            android:nextFocusDown="@+id/btnSysSettings" />
+                            android:nextFocusLeft="@id/btnLangEn"
+                            android:nextFocusUp="@id/btnSettingsClose"
+                            android:nextFocusRight="@id/btnWallDay"
+                            android:nextFocusDown="@id/btnSysSettings" />
 
                         <TextView
                             android:id="@+id/btnWallDay"
                             android:layout_width="0dp"
-                            android:layout_height="44dp"
+                            android:layout_height="42dp"
                             android:layout_weight="1"
                             android:layout_marginStart="4dp"
                             android:layout_marginEnd="4dp"
@@ -333,15 +447,18 @@
                             android:gravity="center"
                             android:fontFamily="@font/outfit"
                             android:fontVariationSettings="'wght' 500"
-                            android:text="☀️ Gündüz"
+                            android:text="@string/settings_wall_day"
                             android:textColor="@drawable/setting_option_text"
                             android:textSize="13sp"
-                            android:nextFocusDown="@+id/btnSysSettings" />
+                            android:nextFocusLeft="@id/btnWallAuto"
+                            android:nextFocusUp="@id/btnSettingsClose"
+                            android:nextFocusRight="@id/btnWallNight"
+                            android:nextFocusDown="@id/btnSysWifi" />
 
                         <TextView
                             android:id="@+id/btnWallNight"
                             android:layout_width="0dp"
-                            android:layout_height="44dp"
+                            android:layout_height="42dp"
                             android:layout_weight="1"
                             android:layout_marginStart="6dp"
                             android:background="@drawable/setting_option_bg"
@@ -350,27 +467,30 @@
                             android:gravity="center"
                             android:fontFamily="@font/outfit"
                             android:fontVariationSettings="'wght' 500"
-                            android:text="🌙 Gece"
+                            android:text="@string/settings_wall_night"
                             android:textColor="@drawable/setting_option_text"
                             android:textSize="13sp"
-                            android:nextFocusDown="@+id/btnSysSettings" />
+                            android:nextFocusLeft="@id/btnWallDay"
+                            android:nextFocusUp="@id/btnSettingsClose"
+                            android:nextFocusRight="@id/btnWallNight"
+                            android:nextFocusDown="@id/btnSysApps" />
                     </LinearLayout>
                 </LinearLayout>
 
-                <!-- Card 4: Sistem Kısayolları -->
+                <!-- Card 4: System Shortcuts -->
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:background="@drawable/setting_card_bg"
                     android:orientation="vertical"
-                    android:padding="20dp">
+                    android:padding="16dp">
 
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:fontFamily="@font/outfit"
                         android:fontVariationSettings="'wght' 600"
-                        android:text="Android TV Sistem Kısayolları"
+                        android:text="@string/settings_system_shortcuts_title"
                         android:textColor="#FFFFFFFF"
                         android:textSize="17sp" />
 
@@ -378,9 +498,9 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="2dp"
-                        android:layout_marginBottom="14dp"
+                        android:layout_marginBottom="12dp"
                         android:fontFamily="@font/outfit"
-                        android:text="Cihaz, ağ ve uygulama yönetimi"
+                        android:text="@string/settings_system_shortcuts_desc"
                         android:textColor="#80FFFFFF"
                         android:textSize="13sp" />
 
@@ -392,7 +512,7 @@
                         <TextView
                             android:id="@+id/btnSysSettings"
                             android:layout_width="0dp"
-                            android:layout_height="44dp"
+                            android:layout_height="42dp"
                             android:layout_weight="1"
                             android:layout_marginEnd="6dp"
                             android:background="@drawable/setting_option_bg"
@@ -401,15 +521,18 @@
                             android:gravity="center"
                             android:fontFamily="@font/outfit"
                             android:fontVariationSettings="'wght' 500"
-                            android:text="⚙️ Sistem Ayarları"
+                            android:text="@string/settings_btn_system"
                             android:textColor="@drawable/setting_option_text"
                             android:textSize="13sp"
-                            android:nextFocusUp="@+id/btnWallAuto" />
+                            android:nextFocusLeft="@id/btnPeekNone"
+                            android:nextFocusUp="@id/btnWallAuto"
+                            android:nextFocusRight="@id/btnSysWifi"
+                            android:nextFocusDown="@id/btnSysSettings" />
 
                         <TextView
                             android:id="@+id/btnSysWifi"
                             android:layout_width="0dp"
-                            android:layout_height="44dp"
+                            android:layout_height="42dp"
                             android:layout_weight="1"
                             android:layout_marginStart="4dp"
                             android:layout_marginEnd="4dp"
@@ -419,15 +542,18 @@
                             android:gravity="center"
                             android:fontFamily="@font/outfit"
                             android:fontVariationSettings="'wght' 500"
-                            android:text="📶 Wi-Fi Ayarları"
+                            android:text="@string/settings_btn_wifi"
                             android:textColor="@drawable/setting_option_text"
                             android:textSize="13sp"
-                            android:nextFocusUp="@+id/btnWallAuto" />
+                            android:nextFocusLeft="@id/btnSysSettings"
+                            android:nextFocusUp="@id/btnWallDay"
+                            android:nextFocusRight="@id/btnSysApps"
+                            android:nextFocusDown="@id/btnSysWifi" />
 
                         <TextView
                             android:id="@+id/btnSysApps"
                             android:layout_width="0dp"
-                            android:layout_height="44dp"
+                            android:layout_height="42dp"
                             android:layout_weight="1"
                             android:layout_marginStart="6dp"
                             android:background="@drawable/setting_option_bg"
@@ -436,10 +562,13 @@
                             android:gravity="center"
                             android:fontFamily="@font/outfit"
                             android:fontVariationSettings="'wght' 500"
-                            android:text="📱 Uygulamalar"
+                            android:text="@string/settings_btn_apps"
                             android:textColor="@drawable/setting_option_text"
                             android:textSize="13sp"
-                            android:nextFocusUp="@+id/btnWallAuto" />
+                            android:nextFocusLeft="@id/btnSysWifi"
+                            android:nextFocusUp="@id/btnWallNight"
+                            android:nextFocusRight="@id/btnSysApps"
+                            android:nextFocusDown="@id/btnSysApps" />
                     </LinearLayout>
                 </LinearLayout>
             </LinearLayout>
