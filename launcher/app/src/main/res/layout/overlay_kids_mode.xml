@@ -40,7 +40,7 @@
                 android:layout_marginStart="16dp"
                 android:fontFamily="@font/outfit"
                 android:fontVariationSettings="'wght' 600"
-                android:text="Hẹn giờ &amp; Khóa trẻ em"
+                android:text="@string/kids_title"
                 android:textColor="#FFFFFFFF"
                 android:textSize="28sp" />
 
@@ -51,7 +51,6 @@
                 android:layout_marginStart="24dp"
                 android:fontFamily="@font/outfit"
                 android:fontVariationSettings="'wght' 400"
-                android:text="Trạng thái: Đang tắt"
                 android:textColor="#80FFFFFF"
                 android:textSize="18sp" />
         </LinearLayout>
@@ -83,31 +82,31 @@
                 <TextView
                     android:id="@+id/btnTimer15"
                     style="@style/SettingOption"
-                    android:text="15 phút" />
+                    android:text="@string/kids_btn_15" />
 
                 <TextView
                     android:id="@+id/btnTimer30"
                     style="@style/SettingOption"
                     android:layout_marginStart="14dp"
-                    android:text="30 phút" />
+                    android:text="@string/kids_btn_30" />
 
                 <TextView
                     android:id="@+id/btnTimer45"
                     style="@style/SettingOption"
                     android:layout_marginStart="14dp"
-                    android:text="45 phút" />
+                    android:text="@string/kids_btn_45" />
 
                 <TextView
                     android:id="@+id/btnTimer60"
                     style="@style/SettingOption"
                     android:layout_marginStart="14dp"
-                    android:text="60 phút" />
+                    android:text="@string/kids_btn_60" />
 
                 <TextView
                     android:id="@+id/btnTimerOff"
                     style="@style/SettingOption"
                     android:layout_marginStart="14dp"
-                    android:text="Tắt hẹn giờ" />
+                    android:text="@string/kids_btn_off" />
             </LinearLayout>
         </LinearLayout>
 
@@ -146,13 +145,13 @@
                 <TextView
                     android:id="@+id/btnKidsChangePin"
                     style="@style/SettingOption"
-                    android:text="Đổi mã PIN mới" />
+                    android:text="@string/kids_change_pin" />
 
                 <TextView
                     android:id="@+id/btnKidsLockNow"
                     style="@style/SettingOption"
                     android:layout_marginStart="14dp"
-                    android:text="Khóa TV ngay bây giờ" />
+                    android:text="@string/kids_lock_now" />
             </LinearLayout>
         </LinearLayout>
 

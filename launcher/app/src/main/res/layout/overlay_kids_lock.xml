@@ -28,7 +28,7 @@
             android:layout_height="wrap_content"
             android:fontFamily="@font/outfit"
             android:fontVariationSettings="'wght' 600"
-            android:text="ĐÃ HẾT GIỜ XEM TV"
+            android:text="@string/kids_locked_heading"
             android:textColor="#FFFFFFFF"
             android:textSize="32sp"
             android:letterSpacing="0.04"
@@ -40,7 +40,7 @@
             android:layout_height="wrap_content"
             android:fontFamily="@font/outfit"
             android:fontVariationSettings="'wght' 400"
-            android:text="Bé hãy nghỉ ngơi nhé. Nhờ bố mẹ nhập mã PIN để mở khóa."
+            android:text="@string/kids_locked_subtitle"
             android:textColor="#A0FFFFFF"
             android:textSize="16sp"
             android:layout_marginBottom="24dp" />
@@ -76,6 +76,10 @@
                     android:layout_width="68dp"
                     android:layout_height="50dp"
                     android:gravity="center"
+                    android:nextFocusLeft="@id/pad1"
+                    android:nextFocusRight="@id/pad2"
+                    android:nextFocusUp="@id/pad1"
+                    android:nextFocusDown="@id/pad4"
                     android:text="1"
                     android:textSize="20sp" />
 
@@ -86,6 +90,10 @@
                     android:layout_height="50dp"
                     android:layout_marginStart="12dp"
                     android:gravity="center"
+                    android:nextFocusLeft="@id/pad1"
+                    android:nextFocusRight="@id/pad3"
+                    android:nextFocusUp="@id/pad2"
+                    android:nextFocusDown="@id/pad5"
                     android:text="2"
                     android:textSize="20sp" />
 
@@ -96,6 +104,10 @@
                     android:layout_height="50dp"
                     android:layout_marginStart="12dp"
                     android:gravity="center"
+                    android:nextFocusLeft="@id/pad2"
+                    android:nextFocusRight="@id/pad3"
+                    android:nextFocusUp="@id/pad3"
+                    android:nextFocusDown="@id/pad6"
                     android:text="3"
                     android:textSize="20sp" />
             </LinearLayout>
@@ -113,6 +125,10 @@
                     android:layout_width="68dp"
                     android:layout_height="50dp"
                     android:gravity="center"
+                    android:nextFocusLeft="@id/pad4"
+                    android:nextFocusRight="@id/pad5"
+                    android:nextFocusUp="@id/pad1"
+                    android:nextFocusDown="@id/pad7"
                     android:text="4"
                     android:textSize="20sp" />
 
@@ -123,6 +139,10 @@
                     android:layout_height="50dp"
                     android:layout_marginStart="12dp"
                     android:gravity="center"
+                    android:nextFocusLeft="@id/pad4"
+                    android:nextFocusRight="@id/pad6"
+                    android:nextFocusUp="@id/pad2"
+                    android:nextFocusDown="@id/pad8"
                     android:text="5"
                     android:textSize="20sp" />
 
@@ -133,6 +153,10 @@
                     android:layout_height="50dp"
                     android:layout_marginStart="12dp"
                     android:gravity="center"
+                    android:nextFocusLeft="@id/pad5"
+                    android:nextFocusRight="@id/pad6"
+                    android:nextFocusUp="@id/pad3"
+                    android:nextFocusDown="@id/pad9"
                     android:text="6"
                     android:textSize="20sp" />
             </LinearLayout>
@@ -150,6 +174,10 @@
                     android:layout_width="68dp"
                     android:layout_height="50dp"
                     android:gravity="center"
+                    android:nextFocusLeft="@id/pad7"
+                    android:nextFocusRight="@id/pad8"
+                    android:nextFocusUp="@id/pad4"
+                    android:nextFocusDown="@id/padClear"
                     android:text="7"
                     android:textSize="20sp" />
 
@@ -160,6 +188,10 @@
                     android:layout_height="50dp"
                     android:layout_marginStart="12dp"
                     android:gravity="center"
+                    android:nextFocusLeft="@id/pad7"
+                    android:nextFocusRight="@id/pad9"
+                    android:nextFocusUp="@id/pad5"
+                    android:nextFocusDown="@id/pad0"
                     android:text="8"
                     android:textSize="20sp" />
 
@@ -170,6 +202,10 @@
                     android:layout_height="50dp"
                     android:layout_marginStart="12dp"
                     android:gravity="center"
+                    android:nextFocusLeft="@id/pad8"
+                    android:nextFocusRight="@id/pad9"
+                    android:nextFocusUp="@id/pad6"
+                    android:nextFocusDown="@id/padEnter"
                     android:text="9"
                     android:textSize="20sp" />
             </LinearLayout>
@@ -187,6 +223,10 @@
                     android:layout_width="68dp"
                     android:layout_height="50dp"
                     android:gravity="center"
+                    android:nextFocusLeft="@id/padClear"
+                    android:nextFocusRight="@id/pad0"
+                    android:nextFocusUp="@id/pad7"
+                    android:nextFocusDown="@id/padClear"
                     android:text="⌫"
                     android:textSize="20sp" />
 
@@ -197,6 +237,10 @@
                     android:layout_height="50dp"
                     android:layout_marginStart="12dp"
                     android:gravity="center"
+                    android:nextFocusLeft="@id/padClear"
+                    android:nextFocusRight="@id/padEnter"
+                    android:nextFocusUp="@id/pad8"
+                    android:nextFocusDown="@id/pad0"
                     android:text="0"
                     android:textSize="20sp" />
 
@@ -207,6 +251,10 @@
                     android:layout_height="50dp"
                     android:layout_marginStart="12dp"
                     android:gravity="center"
+                    android:nextFocusLeft="@id/pad0"
+                    android:nextFocusRight="@id/padEnter"
+                    android:nextFocusUp="@id/pad9"
+                    android:nextFocusDown="@id/padEnter"
                     android:text="OK"
                     android:textSize="18sp" />
             </LinearLayout>

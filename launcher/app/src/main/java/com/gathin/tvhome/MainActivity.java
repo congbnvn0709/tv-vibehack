@@ -1144,7 +1144,10 @@ public class MainActivity extends Activity implements AppAdapter.TileListener {
 
             findViewById(R.id.btnKidsChangePin).setOnClickListener(v -> startChangePin());
             findViewById(R.id.btnKidsLockNow).setOnClickListener(v -> {
-                hideKidsSettings();
+                if (kidsOverlay != null) {
+                    kidsOverlay.animate().cancel();
+                    kidsOverlay.setVisibility(View.GONE);
+                }
                 KidsModeManager.setLocked(this, true);
                 showLockScreen();
             });
@@ -1155,16 +1158,16 @@ public class MainActivity extends Activity implements AppAdapter.TileListener {
         kidsOverlay.setAlpha(0f);
         kidsOverlay.setVisibility(View.VISIBLE);
         kidsOverlay.animate().alpha(1f).setDuration(220).start();
-        findViewById(R.id.btnKidsClose).requestFocus();
+        findViewById(R.id.btnTimer15).requestFocus();
     }
 
     private void updateKidsOverlayUI() {
         if (txtKidsTimerStatus == null) return;
         if (KidsModeManager.isTimerActive(this)) {
             int mins = KidsModeManager.getRemainingMinutes(this);
-            txtKidsTimerStatus.setText("Trạng thái: Tắt sau " + mins + " phút");
+            txtKidsTimerStatus.setText(getString(R.string.kids_status_prefix) + getString(R.string.kids_status_remain, mins));
         } else {
-            txtKidsTimerStatus.setText("Trạng thái: Đang tắt");
+            txtKidsTimerStatus.setText(getString(R.string.kids_status_prefix) + getString(R.string.kids_status_off));
         }
         int cur = KidsModeManager.getTimerMinutes(this);
         findViewById(R.id.btnTimer15).setSelected(cur == 15);
@@ -1197,12 +1200,17 @@ public class MainActivity extends Activity implements AppAdapter.TileListener {
     }
 
     private void startChangePin() {
-        hideKidsSettings();
+        if (kidsOverlay != null) {
+            kidsOverlay.animate().cancel();
+            kidsOverlay.setVisibility(View.GONE);
+        }
         isChangingPin = true;
         tempNewPin = "";
         showLockScreen();
         TextView sub = findViewById(R.id.txtLockSubtitle);
-        if (sub != null) sub.setText("Nhập mã PIN hiện tại (mặc định 0000):");
+        if (sub != null) sub.setText(R.string.kids_pin_prompt_current);
+        View pad1 = findViewById(R.id.pad1);
+        if (pad1 != null) pad1.requestFocus();
     }
 
     private void showLockScreen() {
@@ -1236,7 +1244,7 @@ public class MainActivity extends Activity implements AppAdapter.TileListener {
         isChangingPin = false;
         tempNewPin = "";
         TextView sub = findViewById(R.id.txtLockSubtitle);
-        if (sub != null) sub.setText("Bé hãy nghỉ ngơi nhé. Nhờ bố mẹ nhập mã PIN để mở khóa.");
+        if (sub != null) sub.setText(R.string.kids_locked_subtitle);
         focusTile(lastFocused >= 0 ? lastFocused : 0);
     }
 
@@ -1279,16 +1287,15 @@ public class MainActivity extends Activity implements AppAdapter.TileListener {
                     currentPinInput.setLength(0);
                     updatePinDots();
                     TextView sub = findViewById(R.id.txtLockSubtitle);
-                    if (sub != null) sub.setText("Nhập mã PIN 4 số MỚI:");
-                    Toast.makeText(this, "Đúng mã cũ! Nhập mã PIN mới", Toast.LENGTH_SHORT).show();
+                    if (sub != null) sub.setText(R.string.kids_pin_prompt_new);
                 } else {
-                    Toast.makeText(this, "Sai mã PIN hiện tại!", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(this, R.string.kids_pin_wrong, Toast.LENGTH_SHORT).show();
                     currentPinInput.setLength(0);
                     updatePinDots();
                 }
             } else {
                 KidsModeManager.setPin(this, entered);
-                Toast.makeText(this, "Đổi mã PIN mới thành công!", Toast.LENGTH_LONG).show();
+                Toast.makeText(this, R.string.kids_pin_changed, Toast.LENGTH_LONG).show();
                 hideLockScreen();
             }
             return;
