@@ -290,7 +290,17 @@ public class MainActivity extends Activity implements AppAdapter.TileListener {
     }
 
     @Override
+    protected void onNewIntent(Intent intent) {
+        super.onNewIntent(intent);
+        setIntent(intent);
+        dismissAllOverlays();
+    }
+
+    @Override
     public boolean dispatchKeyEvent(KeyEvent event) {
+        if (event.getKeyCode() == KeyEvent.KEYCODE_HOME && event.getAction() == KeyEvent.ACTION_UP) {
+            dismissAllOverlays();
+        }
         if (overlayKidsLock != null && overlayKidsLock.getVisibility() == View.VISIBLE) {
             int code = event.getKeyCode();
             if (code == KeyEvent.KEYCODE_BACK) {
@@ -381,6 +391,46 @@ public class MainActivity extends Activity implements AppAdapter.TileListener {
                 View btn = findViewById(R.id.btnCalendar);
                 if (btn != null) btn.requestFocus();
             }
+        }
+    }
+
+    private void dismissAllOverlays() {
+        if (settingsOverlay != null && settingsOverlay.getVisibility() == View.VISIBLE) {
+            settingsOverlay.animate().cancel();
+            settingsOverlay.setVisibility(View.GONE);
+        }
+        if (calendarOverlay != null && calendarOverlay.getVisibility() == View.VISIBLE) {
+            calendarOverlay.animate().cancel();
+            calendarOverlay.setVisibility(View.GONE);
+        }
+        if (kidsOverlay != null && kidsOverlay.getVisibility() == View.VISIBLE) {
+            kidsOverlay.animate().cancel();
+            kidsOverlay.setVisibility(View.GONE);
+        }
+        if (overlayKidsLock != null && overlayKidsLock.getVisibility() == View.VISIBLE) {
+            // Only dismiss if not in active timed-out lock
+            if (!KidsModeManager.isLocked(this)) {
+                overlayKidsLock.animate().cancel();
+                overlayKidsLock.setVisibility(View.GONE);
+                isChangingPin = false;
+                tempNewPin = "";
+                TextView sub = findViewById(R.id.txtLockSubtitle);
+                if (sub != null) sub.setText(R.string.kids_locked_subtitle);
+            }
+        }
+        if (KidsModeManager.isLocked(this)) {
+            grid.setDescendantFocusability(ViewGroup.FOCUS_BLOCK_DESCENDANTS);
+            View topButtons = findViewById(R.id.topButtons);
+            if (topButtons instanceof ViewGroup) {
+                ((ViewGroup) topButtons).setDescendantFocusability(ViewGroup.FOCUS_BLOCK_DESCENDANTS);
+            }
+        } else {
+            grid.setDescendantFocusability(ViewGroup.FOCUS_AFTER_DESCENDANTS);
+            View topButtons = findViewById(R.id.topButtons);
+            if (topButtons instanceof ViewGroup) {
+                ((ViewGroup) topButtons).setDescendantFocusability(ViewGroup.FOCUS_AFTER_DESCENDANTS);
+            }
+            focusTile(0);
         }
     }
 
