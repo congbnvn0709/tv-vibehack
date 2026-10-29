@@ -1049,7 +1049,7 @@ public class MainActivity extends Activity implements AppAdapter.TileListener {
             }
         }
 
-        if (btnCalendar != null) btnCalendar.setText(showText ? "Calendar" : "");
+        if (btnCalendar != null) btnCalendar.setText(showText ? getString(R.string.cal_title) : "");
         if (btnSettings != null) btnSettings.setText(showText ? getString(R.string.settings) : "");
         updateWifiLabel();
         updateKidsPill();
@@ -1169,7 +1169,7 @@ public class MainActivity extends Activity implements AppAdapter.TileListener {
             btnKidsMode.setText("👶 " + mins + "p");
             btnKidsMode.setSelected(true);
         } else {
-            btnKidsMode.setText(isTopBarShowText ? "Hẹn giờ" : "");
+            btnKidsMode.setText(isTopBarShowText ? getString(R.string.pill_timer) : "");
             btnKidsMode.setSelected(false);
         }
     }

@@ -51,6 +51,7 @@
     <string name="cal_no_events">No scheduled events</string>
 
     <!-- Kids Mode & Sleep Timer -->
+    <string name="pill_timer">Timer</string>
     <string name="kids_title">Kids Mode &amp; Sleep Timer</string>
     <string name="kids_subtitle">Protect children\'s eyes and manage TV screen time</string>
     <string name="kids_status_prefix">Status: </string>

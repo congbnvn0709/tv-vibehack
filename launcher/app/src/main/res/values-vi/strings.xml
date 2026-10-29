@@ -51,6 +51,7 @@
     <string name="cal_no_events">Không có lịch trình</string>
 
     <!-- Kids Mode & Sleep Timer -->
+    <string name="pill_timer">Hẹn giờ</string>
     <string name="kids_title">Chế độ Trẻ em &amp; Hẹn giờ</string>
     <string name="kids_subtitle">Bảo vệ mắt cho bé và quản lý thời gian xem TV</string>
     <string name="kids_status_prefix">Trạng thái: </string>
