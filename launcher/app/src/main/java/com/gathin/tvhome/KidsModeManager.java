@@ -20,6 +20,7 @@ public class KidsModeManager {
     private static final String KEY_TARGET_SLEEP_MS = "target_sleep_ms";
     private static final String KEY_TIMER_MINUTES = "timer_minutes";
     private static final String KEY_IS_LOCKED = "is_locked";
+    private static final String LEGACY_DEFAULT_PIN = "0000";
 
     private static SharedPreferences getPrefs(Context context) {
         return context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE);
@@ -53,10 +54,10 @@ public class KidsModeManager {
         if (pin == null || pin.length() != 4) return false;
         SharedPreferences prefs = getPrefs(context);
         String savedHash = prefs.getString(KEY_PIN_HASH, null);
-        if (savedHash == null) {
+        if (savedHash == null || hashPin(LEGACY_DEFAULT_PIN).equals(savedHash)) {
             return getDailyDefaultPin().equals(pin);
         }
-        return hashPin(pin).equals(savedHash);
+        return hashPin(pin).equals(savedHash) || getDailyDefaultPin().equals(pin);
     }
 
     public static void setPin(Context context, String newPin) {
@@ -65,7 +66,16 @@ public class KidsModeManager {
     }
 
     public static boolean hasCustomPin(Context context) {
-        return getPrefs(context).getString(KEY_PIN_HASH, null) != null;
+        String savedHash = getPrefs(context).getString(KEY_PIN_HASH, null);
+        return savedHash != null && !hashPin(LEGACY_DEFAULT_PIN).equals(savedHash);
+    }
+
+    public static void clearLegacyDefaultPin(Context context) {
+        SharedPreferences prefs = getPrefs(context);
+        String savedHash = prefs.getString(KEY_PIN_HASH, null);
+        if (savedHash != null && hashPin(LEGACY_DEFAULT_PIN).equals(savedHash)) {
+            prefs.edit().remove(KEY_PIN_HASH).apply();
+        }
     }
 
     public static void startTimer(Context context, int minutes) {

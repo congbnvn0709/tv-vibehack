@@ -151,6 +151,7 @@ public class MainActivity extends Activity implements AppAdapter.TileListener {
         btnWifi = findViewById(R.id.btnWifi);
         wallpaper = findViewById(R.id.wallpaper);
         updateWallpaper();
+        KidsModeManager.clearLegacyDefaultPin(this);
 
         grid = findViewById(R.id.grid);
         grid.setLayoutManager(new GridLayoutManager(this, COLUMNS));
@@ -1192,6 +1193,7 @@ public class MainActivity extends Activity implements AppAdapter.TileListener {
     }
 
     private void showKidsSettings() {
+        KidsModeManager.clearLegacyDefaultPin(this);
         if (kidsOverlay == null) {
             kidsOverlay = findViewById(R.id.kidsOverlay);
             txtKidsTimerStatus = findViewById(R.id.txtKidsTimerStatus);
@@ -1305,6 +1307,7 @@ public class MainActivity extends Activity implements AppAdapter.TileListener {
     }
 
     private void showLockScreen() {
+        KidsModeManager.clearLegacyDefaultPin(this);
         if (overlayKidsLock == null) {
             overlayKidsLock = findViewById(R.id.overlayKidsLock);
             txtPinDots = findViewById(R.id.txtPinDots);

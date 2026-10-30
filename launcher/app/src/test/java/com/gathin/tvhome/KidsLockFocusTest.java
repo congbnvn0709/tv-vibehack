@@ -103,4 +103,28 @@ public class KidsLockFocusTest {
         String content = new String(Files.readAllBytes(file.toPath()));
         assertTrue("overlay_kids_mode.xml must contain btnTimerCustom", content.contains("android:id=\"@+id/btnTimerCustom\""));
     }
+
+    @Test
+    public void testKidsModeOverlayHasExplicit2DFocusMatrix() throws Exception {
+        File file = new File("src/main/res/layout/overlay_kids_mode.xml");
+        if (!file.exists()) {
+            file = new File("app/src/main/res/layout/overlay_kids_mode.xml");
+        }
+        assertTrue("overlay_kids_mode.xml should exist", file.exists());
+        String content = new String(Files.readAllBytes(file.toPath()));
+
+        // Header close button connects to first timer option
+        assertTrue(content.contains("android:nextFocusDown=\"@id/btnTimer15\""));
+
+        // Horizontal chain across timer buttons prevents premature jump down
+        assertTrue(content.contains("android:nextFocusRight=\"@id/btnTimer30\""));
+        assertTrue(content.contains("android:nextFocusRight=\"@id/btnTimer45\""));
+        assertTrue(content.contains("android:nextFocusRight=\"@id/btnTimer60\""));
+        assertTrue(content.contains("android:nextFocusRight=\"@id/btnTimerCustom\""));
+        assertTrue(content.contains("android:nextFocusRight=\"@id/btnTimerOff\""));
+
+        // Security row navigation
+        assertTrue(content.contains("android:nextFocusRight=\"@id/btnKidsLockNow\""));
+        assertTrue(content.contains("android:nextFocusUp=\"@id/btnTimer15\""));
+    }
 }

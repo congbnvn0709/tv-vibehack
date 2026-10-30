@@ -32,7 +32,11 @@
                 android:layout_height="44dp"
                 android:gravity="center"
                 android:text="←"
-                android:textSize="20sp" />
+                android:textSize="20sp"
+                android:nextFocusLeft="@id/btnKidsClose"
+                android:nextFocusRight="@id/btnTimer15"
+                android:nextFocusUp="@id/btnKidsClose"
+                android:nextFocusDown="@id/btnTimer15" />
 
             <TextView
                 android:layout_width="wrap_content"
@@ -82,37 +86,61 @@
                 <TextView
                     android:id="@+id/btnTimer15"
                     style="@style/SettingOption"
-                    android:text="@string/kids_btn_15" />
+                    android:text="@string/kids_btn_15"
+                    android:nextFocusLeft="@id/btnKidsClose"
+                    android:nextFocusRight="@id/btnTimer30"
+                    android:nextFocusUp="@id/btnKidsClose"
+                    android:nextFocusDown="@id/btnKidsChangePin" />
 
                 <TextView
                     android:id="@+id/btnTimer30"
                     style="@style/SettingOption"
                     android:layout_marginStart="14dp"
-                    android:text="@string/kids_btn_30" />
+                    android:text="@string/kids_btn_30"
+                    android:nextFocusLeft="@id/btnTimer15"
+                    android:nextFocusRight="@id/btnTimer45"
+                    android:nextFocusUp="@id/btnKidsClose"
+                    android:nextFocusDown="@id/btnKidsChangePin" />
 
                 <TextView
                     android:id="@+id/btnTimer45"
                     style="@style/SettingOption"
                     android:layout_marginStart="14dp"
-                    android:text="@string/kids_btn_45" />
+                    android:text="@string/kids_btn_45"
+                    android:nextFocusLeft="@id/btnTimer30"
+                    android:nextFocusRight="@id/btnTimer60"
+                    android:nextFocusUp="@id/btnKidsClose"
+                    android:nextFocusDown="@id/btnKidsChangePin" />
 
                 <TextView
                     android:id="@+id/btnTimer60"
                     style="@style/SettingOption"
                     android:layout_marginStart="14dp"
-                    android:text="@string/kids_btn_60" />
+                    android:text="@string/kids_btn_60"
+                    android:nextFocusLeft="@id/btnTimer45"
+                    android:nextFocusRight="@id/btnTimerCustom"
+                    android:nextFocusUp="@id/btnKidsClose"
+                    android:nextFocusDown="@id/btnKidsLockNow" />
 
                 <TextView
                     android:id="@+id/btnTimerCustom"
                     style="@style/SettingOption"
                     android:layout_marginStart="14dp"
-                    android:text="@string/kids_btn_custom" />
+                    android:text="@string/kids_btn_custom"
+                    android:nextFocusLeft="@id/btnTimer60"
+                    android:nextFocusRight="@id/btnTimerOff"
+                    android:nextFocusUp="@id/btnKidsClose"
+                    android:nextFocusDown="@id/btnKidsLockNow" />
 
                 <TextView
                     android:id="@+id/btnTimerOff"
                     style="@style/SettingOption"
                     android:layout_marginStart="14dp"
-                    android:text="@string/kids_btn_off" />
+                    android:text="@string/kids_btn_off"
+                    android:nextFocusLeft="@id/btnTimerCustom"
+                    android:nextFocusRight="@id/btnTimerOff"
+                    android:nextFocusUp="@id/btnKidsClose"
+                    android:nextFocusDown="@id/btnKidsLockNow" />
             </LinearLayout>
         </LinearLayout>
 
@@ -151,13 +179,21 @@
                 <TextView
                     android:id="@+id/btnKidsChangePin"
                     style="@style/SettingOption"
-                    android:text="@string/kids_change_pin" />
+                    android:text="@string/kids_change_pin"
+                    android:nextFocusLeft="@id/btnKidsChangePin"
+                    android:nextFocusRight="@id/btnKidsLockNow"
+                    android:nextFocusUp="@id/btnTimer15"
+                    android:nextFocusDown="@id/btnKidsChangePin" />
 
                 <TextView
                     android:id="@+id/btnKidsLockNow"
                     style="@style/SettingOption"
                     android:layout_marginStart="14dp"
-                    android:text="@string/kids_lock_now" />
+                    android:text="@string/kids_lock_now"
+                    android:nextFocusLeft="@id/btnKidsChangePin"
+                    android:nextFocusRight="@id/btnKidsLockNow"
+                    android:nextFocusUp="@id/btnTimerCustom"
+                    android:nextFocusDown="@id/btnKidsLockNow" />
             </LinearLayout>
         </LinearLayout>
 
