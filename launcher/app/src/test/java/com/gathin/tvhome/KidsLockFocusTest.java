@@ -82,11 +82,25 @@ public class KidsLockFocusTest {
         assertTrue(content.contains("@string/kids_btn_off"));
         assertTrue(content.contains("@string/kids_change_pin"));
         assertTrue(content.contains("@string/kids_lock_now"));
+        assertTrue(content.contains("@string/kids_btn_custom"));
+        assertTrue(content.contains("@string/kids_pin_default_hint"));
 
         assertFalse(content.contains("android:text=\"15 phút\""));
         assertFalse(content.contains("android:text=\"30 phút\""));
         assertFalse(content.contains("android:text=\"45 phút\""));
         assertFalse(content.contains("android:text=\"60 phút\""));
         assertFalse(content.contains("android:text=\"Tắt hẹn giờ\""));
+        assertFalse(content.contains("Mã PIN mặc định ban đầu là: 0000"));
+    }
+
+    @Test
+    public void testKidsModeOverlayContainsCustomTimerButton() throws Exception {
+        File file = new File("src/main/res/layout/overlay_kids_mode.xml");
+        if (!file.exists()) {
+            file = new File("app/src/main/res/layout/overlay_kids_mode.xml");
+        }
+        assertTrue("overlay_kids_mode.xml should exist", file.exists());
+        String content = new String(Files.readAllBytes(file.toPath()));
+        assertTrue("overlay_kids_mode.xml must contain btnTimerCustom", content.contains("android:id=\"@+id/btnTimerCustom\""));
     }
 }

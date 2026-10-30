@@ -103,6 +103,12 @@
                     android:text="@string/kids_btn_60" />
 
                 <TextView
+                    android:id="@+id/btnTimerCustom"
+                    style="@style/SettingOption"
+                    android:layout_marginStart="14dp"
+                    android:text="@string/kids_btn_custom" />
+
+                <TextView
                     android:id="@+id/btnTimerOff"
                     style="@style/SettingOption"
                     android:layout_marginStart="14dp"
@@ -132,7 +138,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:fontFamily="@font/outfit"
-                android:text="Mã PIN mặc định ban đầu là: 0000. Dùng để mở khóa TV khi hết giờ."
+                android:text="@string/kids_pin_default_hint"
                 android:textColor="#70FFFFFF"
                 android:textSize="14sp"
                 android:layout_marginBottom="16dp" />

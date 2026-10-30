@@ -86,6 +86,8 @@ public class MainActivity extends Activity implements AppAdapter.TileListener {
     private final StringBuilder currentPinInput = new StringBuilder();
     private boolean isChangingPin = false;
     private String tempNewPin = "";
+    private boolean isCustomTimerInput = false;
+    private final StringBuilder customTimerInput = new StringBuilder();
     private ImageView wallpaper;
     private int currentWallpaperRes = 0;
     private boolean isDockPeeking = false;
@@ -330,6 +332,12 @@ public class MainActivity extends Activity implements AppAdapter.TileListener {
                 hideCalendar();
                 return true;
             }
+            if (overlayKidsLock != null && overlayKidsLock.getVisibility() == View.VISIBLE) {
+                if (!KidsModeManager.isLocked(this)) {
+                    hideLockScreen();
+                    return true;
+                }
+            }
         }
         return super.dispatchKeyEvent(event);
     }
@@ -413,7 +421,10 @@ public class MainActivity extends Activity implements AppAdapter.TileListener {
                 overlayKidsLock.animate().cancel();
                 overlayKidsLock.setVisibility(View.GONE);
                 isChangingPin = false;
+                isCustomTimerInput = false;
                 tempNewPin = "";
+                TextView heading = findViewById(R.id.txtLockHeading);
+                if (heading != null) heading.setText(R.string.kids_locked_heading);
                 TextView sub = findViewById(R.id.txtLockSubtitle);
                 if (sub != null) sub.setText(R.string.kids_locked_subtitle);
             }
@@ -1190,6 +1201,7 @@ public class MainActivity extends Activity implements AppAdapter.TileListener {
             findViewById(R.id.btnTimer30).setOnClickListener(v -> selectTimer(30));
             findViewById(R.id.btnTimer45).setOnClickListener(v -> selectTimer(45));
             findViewById(R.id.btnTimer60).setOnClickListener(v -> selectTimer(60));
+            findViewById(R.id.btnTimerCustom).setOnClickListener(v -> startCustomTimerInput());
             findViewById(R.id.btnTimerOff).setOnClickListener(v -> selectTimer(0));
 
             findViewById(R.id.btnKidsChangePin).setOnClickListener(v -> startChangePin());
@@ -1224,6 +1236,10 @@ public class MainActivity extends Activity implements AppAdapter.TileListener {
         findViewById(R.id.btnTimer30).setSelected(cur == 30);
         findViewById(R.id.btnTimer45).setSelected(cur == 45);
         findViewById(R.id.btnTimer60).setSelected(cur == 60);
+        View btnCustom = findViewById(R.id.btnTimerCustom);
+        if (btnCustom != null) {
+            btnCustom.setSelected(cur > 0 && cur != 15 && cur != 30 && cur != 45 && cur != 60);
+        }
         findViewById(R.id.btnTimerOff).setSelected(cur == 0);
     }
 
@@ -1257,10 +1273,35 @@ public class MainActivity extends Activity implements AppAdapter.TileListener {
         isChangingPin = true;
         tempNewPin = "";
         showLockScreen();
+        TextView heading = findViewById(R.id.txtLockHeading);
+        if (heading != null) heading.setText(R.string.kids_title);
         TextView sub = findViewById(R.id.txtLockSubtitle);
         if (sub != null) sub.setText(R.string.kids_pin_prompt_current);
         View pad1 = findViewById(R.id.pad1);
         if (pad1 != null) pad1.requestFocus();
+    }
+
+    private void startCustomTimerInput() {
+        if (kidsOverlay != null) {
+            kidsOverlay.animate().cancel();
+            kidsOverlay.setVisibility(View.GONE);
+        }
+        isCustomTimerInput = true;
+        customTimerInput.setLength(0);
+        showLockScreen();
+        TextView heading = findViewById(R.id.txtLockHeading);
+        if (heading != null) heading.setText(R.string.kids_title);
+        TextView sub = findViewById(R.id.txtLockSubtitle);
+        if (sub != null) sub.setText(R.string.kids_prompt_custom_timer);
+        updateCustomTimerDisplay();
+    }
+
+    private void updateCustomTimerDisplay() {
+        if (txtPinDots == null) return;
+        boolean isVi = getString(R.string.kids_btn_15).toLowerCase().contains("phút");
+        String suffix = isVi ? "phút" : "mins";
+        String val = customTimerInput.length() == 0 ? "0" : customTimerInput.toString();
+        txtPinDots.setText(val + " " + suffix);
     }
 
     private void showLockScreen() {
@@ -1292,13 +1333,27 @@ public class MainActivity extends Activity implements AppAdapter.TileListener {
         grid.setDescendantFocusability(ViewGroup.FOCUS_AFTER_DESCENDANTS);
         ((ViewGroup) findViewById(R.id.topButtons)).setDescendantFocusability(ViewGroup.FOCUS_AFTER_DESCENDANTS);
         isChangingPin = false;
+        isCustomTimerInput = false;
         tempNewPin = "";
+        TextView heading = findViewById(R.id.txtLockHeading);
+        if (heading != null) heading.setText(R.string.kids_locked_heading);
         TextView sub = findViewById(R.id.txtLockSubtitle);
         if (sub != null) sub.setText(R.string.kids_locked_subtitle);
         focusTile(lastFocused >= 0 ? lastFocused : 0);
     }
 
     private void onPinDigitEntered(int digit) {
+        if (isCustomTimerInput) {
+            if (customTimerInput.length() < 3) {
+                if (customTimerInput.length() == 0 && digit == 0) {
+                    return;
+                }
+                customTimerInput.append(digit);
+                updateCustomTimerDisplay();
+            }
+            return;
+        }
+
         if (currentPinInput.length() < 4) {
             currentPinInput.append(digit);
             updatePinDots();
@@ -1309,6 +1364,14 @@ public class MainActivity extends Activity implements AppAdapter.TileListener {
     }
 
     private void onPinBackspace() {
+        if (isCustomTimerInput) {
+            if (customTimerInput.length() > 0) {
+                customTimerInput.deleteCharAt(customTimerInput.length() - 1);
+                updateCustomTimerDisplay();
+            }
+            return;
+        }
+
         if (currentPinInput.length() > 0) {
             currentPinInput.deleteCharAt(currentPinInput.length() - 1);
             updatePinDots();
@@ -1327,6 +1390,19 @@ public class MainActivity extends Activity implements AppAdapter.TileListener {
     }
 
     private void submitPin() {
+        if (isCustomTimerInput) {
+            if (customTimerInput.length() == 0) return;
+            try {
+                int minutes = Integer.parseInt(customTimerInput.toString());
+                minutes = Math.min(Math.max(minutes, 1), 720);
+                isCustomTimerInput = false;
+                hideLockScreen();
+                selectTimer(minutes);
+            } catch (NumberFormatException ignored) {
+            }
+            return;
+        }
+
         String entered = currentPinInput.toString();
         if (entered.length() != 4) return;
 
