@@ -306,7 +306,13 @@ public class MainActivity extends Activity implements AppAdapter.TileListener {
         if (overlayKidsLock != null && overlayKidsLock.getVisibility() == View.VISIBLE) {
             int code = event.getKeyCode();
             if (code == KeyEvent.KEYCODE_BACK) {
-                return true; // Block Back key when locked
+                if (!KidsModeManager.isLocked(this)) {
+                    if (event.getAction() == KeyEvent.ACTION_DOWN) {
+                        hideLockScreen();
+                    }
+                    return true;
+                }
+                return true; // Block Back key only when actively locked
             }
             if (event.getAction() == KeyEvent.ACTION_DOWN) {
                 if (code >= KeyEvent.KEYCODE_0 && code <= KeyEvent.KEYCODE_9) {
@@ -331,12 +337,6 @@ public class MainActivity extends Activity implements AppAdapter.TileListener {
             if (calendarOverlay != null && calendarOverlay.getVisibility() == View.VISIBLE) {
                 hideCalendar();
                 return true;
-            }
-            if (overlayKidsLock != null && overlayKidsLock.getVisibility() == View.VISIBLE) {
-                if (!KidsModeManager.isLocked(this)) {
-                    hideLockScreen();
-                    return true;
-                }
             }
         }
         return super.dispatchKeyEvent(event);
@@ -1329,6 +1329,7 @@ public class MainActivity extends Activity implements AppAdapter.TileListener {
 
     private void hideLockScreen() {
         if (overlayKidsLock == null || overlayKidsLock.getVisibility() != View.VISIBLE) return;
+        boolean wasCustomTimer = isCustomTimerInput;
         overlayKidsLock.setVisibility(View.GONE);
         grid.setDescendantFocusability(ViewGroup.FOCUS_AFTER_DESCENDANTS);
         ((ViewGroup) findViewById(R.id.topButtons)).setDescendantFocusability(ViewGroup.FOCUS_AFTER_DESCENDANTS);
@@ -1339,7 +1340,13 @@ public class MainActivity extends Activity implements AppAdapter.TileListener {
         if (heading != null) heading.setText(R.string.kids_locked_heading);
         TextView sub = findViewById(R.id.txtLockSubtitle);
         if (sub != null) sub.setText(R.string.kids_locked_subtitle);
-        focusTile(lastFocused >= 0 ? lastFocused : 0);
+        if (wasCustomTimer) {
+            showKidsSettings();
+            View btnCustom = findViewById(R.id.btnTimerCustom);
+            if (btnCustom != null) btnCustom.requestFocus();
+        } else {
+            focusTile(lastFocused >= 0 ? lastFocused : 0);
+        }
     }
 
     private void onPinDigitEntered(int digit) {
