@@ -61,12 +61,15 @@
     <string name="kids_btn_30">30 Phút</string>
     <string name="kids_btn_45">45 Phút</string>
     <string name="kids_btn_60">60 Phút</string>
+    <string name="kids_btn_custom">⏱️ Tùy chỉnh...</string>
     <string name="kids_btn_off">Tắt hẹn giờ</string>
     <string name="kids_change_pin">🔒 Đổi mã PIN</string>
     <string name="kids_lock_now">🌙 Khóa TV ngay</string>
     <string name="kids_locked_heading">ĐÃ HẾT GIỜ XEM TV</string>
     <string name="kids_locked_subtitle">Bé hãy nghỉ ngơi nhé. Nhờ bố mẹ nhập mã PIN để mở khóa.</string>
-    <string name="kids_pin_prompt_current">Nhập mã PIN hiện tại (mặc định 0000):</string>
+    <string name="kids_prompt_custom_timer">Nhập số phút hẹn giờ (1 - 720):</string>
+    <string name="kids_pin_default_hint">Mã PIN mặc định là ngày/tháng hôm nay (DDMM, ví dụ: 3010).</string>
+    <string name="kids_pin_prompt_current">Nhập mã PIN hiện tại (mặc định DDMM):</string>
     <string name="kids_pin_prompt_new">Nhập mã PIN mới (4 số):</string>
     <string name="kids_pin_changed">Đã đổi mã PIN thành công!</string>
     <string name="kids_pin_wrong">Mã PIN không đúng!</string>

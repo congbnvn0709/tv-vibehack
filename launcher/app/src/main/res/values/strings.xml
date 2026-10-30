@@ -61,12 +61,15 @@
     <string name="kids_btn_30">30 Mins</string>
     <string name="kids_btn_45">45 Mins</string>
     <string name="kids_btn_60">60 Mins</string>
+    <string name="kids_btn_custom">⏱️ Custom...</string>
     <string name="kids_btn_off">Disable</string>
     <string name="kids_change_pin">🔒 Change PIN</string>
     <string name="kids_lock_now">🌙 Lock TV Now</string>
     <string name="kids_locked_heading">TIME IS UP</string>
     <string name="kids_locked_subtitle">Time to rest! Ask parents to enter the PIN to unlock.</string>
-    <string name="kids_pin_prompt_current">Enter current PIN (default 0000):</string>
+    <string name="kids_prompt_custom_timer">Enter timer minutes (1 - 720):</string>
+    <string name="kids_pin_default_hint">Default PIN is today\'s date (DDMM, e.g. 3010).</string>
+    <string name="kids_pin_prompt_current">Enter current PIN (default DDMM):</string>
     <string name="kids_pin_prompt_new">Enter new 4-digit PIN:</string>
     <string name="kids_pin_changed">PIN changed successfully!</string>
     <string name="kids_pin_wrong">Incorrect PIN!</string>

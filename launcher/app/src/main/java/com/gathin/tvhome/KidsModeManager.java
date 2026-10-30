@@ -6,6 +6,9 @@ import android.content.SharedPreferences;
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.Locale;
 
 /**
  * Manages Kids Mode PIN protection, sleep countdown timer, and screen lock state.
@@ -17,10 +20,17 @@ public class KidsModeManager {
     private static final String KEY_TARGET_SLEEP_MS = "target_sleep_ms";
     private static final String KEY_TIMER_MINUTES = "timer_minutes";
     private static final String KEY_IS_LOCKED = "is_locked";
-    private static final String DEFAULT_PIN = "0000";
 
     private static SharedPreferences getPrefs(Context context) {
         return context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE);
+    }
+
+    public static String getDailyDefaultPin(Date date) {
+        return new SimpleDateFormat("ddMM", Locale.getDefault()).format(date);
+    }
+
+    public static String getDailyDefaultPin() {
+        return getDailyDefaultPin(new Date());
     }
 
     public static String hashPin(String pin) {
@@ -44,7 +54,7 @@ public class KidsModeManager {
         SharedPreferences prefs = getPrefs(context);
         String savedHash = prefs.getString(KEY_PIN_HASH, null);
         if (savedHash == null) {
-            return DEFAULT_PIN.equals(pin);
+            return getDailyDefaultPin().equals(pin);
         }
         return hashPin(pin).equals(savedHash);
     }
